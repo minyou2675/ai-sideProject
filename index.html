@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Podcast Studio</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f5f1;
+      --ink: #1f2428;
+      --muted: #687078;
+      --line: #d9d5ca;
+      --panel: #ffffff;
+      --accent: #0f766e;
+      --accent-dark: #0b5f59;
+      --blue: #2563eb;
+      --rose: #be123c;
+      --gold: #b7791f;
+      --shadow: 0 18px 50px rgba(31, 36, 40, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(135deg, rgba(15, 118, 110, 0.08), transparent 34%),
+        linear-gradient(225deg, rgba(190, 18, 60, 0.08), transparent 32%),
+        var(--bg);
+      color: var(--ink);
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      transition: transform 150ms ease, background 150ms ease, opacity 150ms ease;
+    }
+
+    button:hover { background: var(--accent-dark); transform: translateY(-1px); }
+    button:disabled { cursor: not-allowed; opacity: 0.5; transform: none; }
+
+    .ghost {
+      background: #eef2f1;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .ghost:hover { background: #e2e8e6; }
+
+    .danger { background: var(--rose); }
+    .danger:hover { background: #9f1239; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    header {
+      padding: 26px clamp(16px, 4vw, 44px) 18px;
+      border-bottom: 1px solid rgba(217, 213, 202, 0.72);
+      background: rgba(246, 245, 241, 0.82);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, var(--accent) 0 18%, transparent 18% 26%, var(--blue) 26% 44%, transparent 44% 54%, var(--rose) 54% 72%, transparent 72% 80%, var(--gold) 80% 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.58), var(--shadow);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 4vw, 42px);
+      letter-spacing: 0;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    main {
+      padding: 24px clamp(16px, 4vw, 44px) 44px;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    section {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(217, 213, 202, 0.92);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+
+    .drop {
+      border: 1px dashed #a8b2ad;
+      border-radius: 8px;
+      padding: 18px;
+      background: #fbfbf8;
+      display: grid;
+      gap: 12px;
+    }
+
+    .fileline {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    input[type="file"] {
+      max-width: 100%;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    select, input[type="text"], input[type="password"], input[type="number"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 10px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .scriptbox {
+      min-height: 460px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      border-bottom: 1px solid var(--line);
+      padding: 14px 18px;
+    }
+
+    .script {
+      padding: 18px;
+      overflow: auto;
+      max-height: 54vh;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      background:
+        linear-gradient(180deg, rgba(15, 118, 110, 0.035), transparent 24%),
+        white;
+    }
+
+    .script:empty::before {
+      content: "업로드한 자료를 바탕으로 스크립트가 여기에 생성됩니다.";
+      color: #8b949e;
+    }
+
+    .player {
+      border-top: 1px solid var(--line);
+      padding: 14px 18px 18px;
+      display: grid;
+      gap: 12px;
+      background: #fbfbf8;
+      border-radius: 0 0 8px 8px;
+    }
+
+    audio {
+      width: 100%;
+      height: 42px;
+    }
+
+    .voice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .status {
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .api {
+      margin-top: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .meter {
+      height: 42px;
+      display: grid;
+      grid-template-columns: repeat(36, 1fr);
+      gap: 3px;
+      align-items: end;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7faf9;
+    }
+
+    .meter span {
+      display: block;
+      border-radius: 3px 3px 0 0;
+      background: var(--accent);
+      min-height: 5px;
+      animation: pulse 1200ms ease-in-out infinite;
+      animation-delay: calc(var(--i) * -80ms);
+    }
+
+    @keyframes pulse {
+      0%, 100% { height: 18%; opacity: 0.45; }
+      50% { height: var(--h); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+      .script { max-height: none; }
+      .voice-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .controls { grid-template-columns: 1fr; }
+      .actions button { width: 100%; }
+      header { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="topbar">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"></div>
+          <div>
+            <h1>Podcast Studio</h1>
+            <p class="subtitle">자료를 올리면 2인 대화 스크립트와 더빙 오디오를 만듭니다.</p>
+          </div>
+        </div>
+        <button class="ghost" id="sampleBtn" type="button">샘플 넣기</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel">
+        <h2>자료 입력</h2>
+        <div class="drop" id="dropZone">
+          <div class="fileline">
+            <input id="fileInput" type="file" accept=".txt,.md,.csv,.json,.html,.htm,.log">
+            <button class="ghost" id="clearBtn" type="button">초기화</button>
+          </div>
+          <div class="small">텍스트, 마크다운, CSV, JSON, HTML 파일을 지원합니다. PDF/DOCX는 텍스트로 복사해서 붙여넣으면 가장 안정적입니다.</div>
+        </div>
+
+        <label style="margin-top:14px;">
+          원문
+          <textarea id="sourceText" placeholder="여기에 글을 붙여넣거나 파일을 업로드하세요."></textarea>
+        </label>
+
+        <div class="controls">
+          <label>
+            진행 톤
+            <select id="tone">
+              <option value="clear">차분하고 명확하게</option>
+              <option value="energetic">활기찬 교양 토크</option>
+              <option value="story">스토리텔링 중심</option>
+              <option value="brief">짧고 밀도 있게</option>
+            </select>
+          </label>
+          <label>
+            길이
+            <select id="length">
+              <option value="short">짧게 2-3분</option>
+              <option value="medium" selected>보통 4-6분</option>
+              <option value="long">길게 7-10분</option>
+            </select>
+          </label>
+          <label>
+            호스트 A 이름
+            <input id="hostA" type="text" value="민지" maxlength="16">
+          </label>
+          <label>
+            호스트 B 이름
+            <input id="hostB" type="text" value="준호" maxlength="16">
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="aiGenerateBtn" type="button">API로 스크립트 생성</button>
+          <button class="ghost" id="generateBtn" type="button">로컬 초안 생성</button>
+          <button class="ghost" id="copyBtn" type="button">스크립트 복사</button>
+          <button class="ghost" id="downloadScriptBtn" type="button">TXT 저장</button>
+        </div>
+
+        <div class="api">
+          <h2 style="margin:0;">오디오 파일 생성</h2>
+          <div class="small">브라우저 음성은 바로 들을 수 있습니다. WAV 파일로 저장하려면 OpenAI API 키를 입력해 TTS를 호출하세요. 키는 저장하지 않고 현재 화면에서만 사용합니다.</div>
+          <label>
+            API 키
+            <input id="apiKey" type="password" placeholder="sk-...">
+          </label>
+          <label>
+            스크립트 생성 모델
+            <select id="scriptModel">
+              <option value="gpt-4.1">gpt-4.1</option>
+              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+              <option value="gpt-5.5">gpt-5.5</option>
+            </select>
+          </label>
+          <div class="voice-grid">
+            <label>
+              A 목소리
+              <select id="voiceA">
+                <option value="nova">nova</option>
+                <option value="coral">coral</option>
+                <option value="alloy">alloy</option>
+                <option value="ash">ash</option>
+                <option value="ballad">ballad</option>
+                <option value="echo">echo</option>
+                <option value="fable">fable</option>
+                <option value="onyx">onyx</option>
+                <option value="sage">sage</option>
+                <option value="shimmer">shimmer</option>
+                <option value="verse">verse</option>
+              </select>
+            </label>
+            <label>
+              B 목소리
+              <select id="voiceB">
+                <option value="echo">echo</option>
+                <option value="onyx">onyx</option>
+                <option value="nova">nova</option>
+                <option value="coral">coral</option>
+                <option value="alloy">alloy</option>
+                <option value="ash">ash</option>
+                <option value="ballad">ballad</option>
+                <option value="fable">fable</option>
+                <option value="sage">sage</option>
+                <option value="shimmer">shimmer</option>
+                <option value="verse">verse</option>
+              </select>
+            </label>
+            <label>
+              속도
+              <input id="speed" type="number" min="0.75" max="1.25" step="0.05" value="0.95">
+            </label>
+          </div>
+          <div class="actions" style="margin-top:0;">
+            <button id="ttsBtn" type="button">API 더빙 생성/재생</button>
+            <button class="ghost" id="downloadAudioBtn" type="button" disabled>오디오 저장</button>
+          </div>
+        </div>
+
+        <div class="api">
+          <h2 style="margin:0;">브라우저 음성</h2>
+          <div class="small">설치된 브라우저/운영체제 음성 목록입니다. API 키 없이 미리듣기할 때 사용됩니다.</div>
+          <div class="voice-grid">
+            <label>
+              A 브라우저 음성
+              <select id="browserVoiceA"></select>
+            </label>
+            <label>
+              B 브라우저 음성
+              <select id="browserVoiceB"></select>
+            </label>
+            <label>
+              피치 차이
+              <input id="pitchGap" type="number" min="0" max="0.4" step="0.05" value="0.15">
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="scriptbox">
+        <div class="meta">
+          <span id="stats">대기 중</span>
+          <span id="fileName">파일 없음</span>
+        </div>
+        <div class="script" id="scriptOutput" contenteditable="true" spellcheck="false"></div>
+        <div class="player">
+          <div class="meter" aria-hidden="true" id="meter"></div>
+          <audio id="audioPlayer" controls></audio>
+          <div class="actions" style="margin-top:0;">
+            <button id="playSpeechBtn" type="button">로컬 음성 미리듣기</button>
+            <button class="danger" id="stopSpeechBtn" type="button">정지</button>
+          </div>
+          <div class="status" id="status">원문을 입력한 뒤 스크립트를 생성하세요.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const sourceText = $("sourceText");
+    const scriptOutput = $("scriptOutput");
+    const statusEl = $("status");
+    const statsEl = $("stats");
+    const fileNameEl = $("fileName");
+    const audioPlayer = $("audioPlayer");
+    const downloadAudioBtn = $("downloadAudioBtn");
+    let audioBlob = null;
+    let spokenQueue = [];
+    let speaking = false;
+    let browserVoices = [];
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    function wordCount(text) {
+      const ko = (text.match(/[가-힣]+/g) || []).length;
+      const en = (text.match(/[A-Za-z0-9]+/g) || []).length;
+      return ko + en;
+    }
+
+    function cleanText(text) {
+      return text
+        .replace(/<script[\s\S]*?<\/script>/gi, " ")
+        .replace(/<style[\s\S]*?<\/style>/gi, " ")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/[#>*_`~\[\](){}|]/g, " ")
+        .replace(/\r/g, "\n")
+        .replace(/[ \t]+/g, " ")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
+    }
+
+    function splitSentences(text) {
+      return cleanText(text)
+        .split(/(?<=[.!?。！？다요죠함음임됨됨니다까])\s+|\n+/)
+        .map((s) => s.trim())
+        .filter((s) => s.length > 18);
+    }
+
+    function topKeywords(text, limit = 8) {
+      const stop = new Set(["그리고","그러나","하지만","또한","있는","한다","했다","대한","으로","에서","에게","까지","보다","거나","the","and","for","with","that","this","from","were","have","will"]);
+      const counts = new Map();
+      const words = cleanText(text).match(/[가-힣A-Za-z0-9]{2,}/g) || [];
+      for (const raw of words) {
+        const w = raw.toLowerCase();
+        if (stop.has(w) || /^\d+$/.test(w)) continue;
+        counts.set(w, (counts.get(w) || 0) + 1);
+      }
+      return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit).map(([w]) => w);
+    }
+
+    function scoreSentence(sentence, keywords) {
+      let score = Math.min(sentence.length, 180) / 180;
+      for (const key of keywords) {
+        if (sentence.toLowerCase().includes(key)) score += 1.6;
+      }
+      if (/[0-9%]/.test(sentence)) score += 0.7;
+      if (/중요|핵심|결과|문제|원인|해결|전략|변화|성장|위험|기회/.test(sentence)) score += 0.8;
+      return score;
+    }
+
+    function extractInsights(text, count) {
+      const keywords = topKeywords(text, 10);
+      const sentences = splitSentences(text);
+      const ranked = sentences
+        .map((sentence, index) => ({ sentence, index, score: scoreSentence(sentence, keywords) }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, count)
+        .sort((a, b) => a.index - b.index)
+        .map((item) => item.sentence);
+      return ranked.length ? ranked : [cleanText(text).slice(0, 500)];
+    }
+
+    function makeScript() {
+      const raw = sourceText.value.trim();
+      if (!raw) {
+        setStatus("원문을 먼저 입력하세요.");
+        return;
+      }
+      const a = $("hostA").value.trim() || "민지";
+      const b = $("hostB").value.trim() || "준호";
+      const tone = $("tone").value;
+      const length = $("length").value;
+      const insightCount = length === "short" ? 5 : length === "long" ? 11 : 8;
+      const insights = extractInsights(raw, insightCount);
+      const keywords = topKeywords(raw, 6);
+      const toneLine = {
+        clear: "차분하게 핵심을 짚어보죠.",
+        energetic: "오늘은 흐름을 빠르게 타면서 재미있게 풀어볼게요.",
+        story: "하나의 이야기처럼 맥락을 따라가 보겠습니다.",
+        brief: "군더더기는 줄이고 핵심만 압축해서 보겠습니다."
+      }[tone];
+
+      const lines = [];
+      lines.push("[오프닝 음악 5초]");
+      lines.push(`${a}: 안녕하세요. 오늘의 팟캐스트는 업로드한 자료를 바탕으로 준비했습니다. ${toneLine}`);
+      lines.push(`${b}: 키워드부터 보면 ${keywords.join(", ")}가 반복해서 등장합니다. 이 단어들이 오늘 대화의 지도를 만들어 줍니다.`);
+      lines.push("");
+      lines.push("[본문]");
+
+      insights.forEach((insight, i) => {
+        const speaker = i % 2 === 0 ? a : b;
+        const other = i % 2 === 0 ? b : a;
+        const cleaned = insight.replace(/\s+/g, " ").trim();
+        lines.push(`${speaker}: ${i + 1}번째 포인트입니다. ${cleaned}`);
+        if (i % 3 === 0) {
+          lines.push(`${other}: 그러면 이 내용은 실제로 무엇을 바꿔 봐야 하는지의 문제로 이어지네요.`);
+        } else if (i % 3 === 1) {
+          lines.push(`${other}: 여기서 중요한 건 단순한 사실보다 배경과 영향입니다. 자료가 말하는 방향을 놓치면 해석이 얕아질 수 있어요.`);
+        } else {
+          lines.push(`${other}: 듣는 분들이 기억할 부분은 이 지점입니다. 원인, 변화, 다음 행동을 함께 봐야 합니다.`);
+        }
+      });
+
+      lines.push("");
+      lines.push("[정리]");
+      lines.push(`${a}: 오늘 내용을 정리하면 첫째, 자료는 ${keywords.slice(0, 3).join(", ")}를 중심으로 움직입니다.`);
+      lines.push(`${b}: 둘째, 단편적인 정보보다 연결 관계를 보는 것이 중요합니다. 어떤 변화가 왜 생겼고, 다음 선택에 어떤 영향을 주는지 확인해야 합니다.`);
+      lines.push(`${a}: 셋째, 바로 실행할 수 있는 질문은 하나입니다. 이 내용을 내 상황에 적용한다면 지금 무엇을 먼저 확인해야 할까요?`);
+      lines.push(`${b}: 오늘 준비한 팟캐스트는 여기까지입니다. 들어주셔서 고맙습니다.`);
+      lines.push("[엔딩 음악 5초]");
+
+      const script = lines.join("\n");
+      scriptOutput.textContent = script;
+      updateStats();
+      setStatus("스크립트가 생성되었습니다. 편집한 뒤 바로 재생하거나 WAV로 만들 수 있습니다.");
+      audioBlob = null;
+      audioPlayer.removeAttribute("src");
+      downloadAudioBtn.disabled = true;
+    }
+
+    async function makeAiScript() {
+      const raw = sourceText.value.trim();
+      const key = $("apiKey").value.trim();
+      if (!raw) {
+        setStatus("원문을 먼저 입력하세요.");
+        return;
+      }
+      if (!key) {
+        setStatus("API 스크립트 생성을 하려면 API 키가 필요합니다.");
+        return;
+      }
+
+      const a = $("hostA").value.trim() || "민지";
+      const b = $("hostB").value.trim() || "준호";
+      const tone = $("tone").selectedOptions[0].textContent;
+      const length = $("length").selectedOptions[0].textContent;
+      const model = $("scriptModel").value;
+      const source = cleanText(raw).slice(0, 18000);
+
+      $("aiGenerateBtn").disabled = true;
+      setStatus("OpenAI API로 팟캐스트 스크립트를 생성 중입니다.");
+      try {
+        const prompt = [
+          "업로드된 자료를 바탕으로 한국어 2인 팟캐스트 대화 스크립트를 작성해 주세요.",
+          "",
+          `호스트 A 이름: ${a}`,
+          `호스트 B 이름: ${b}`,
+          `톤: ${tone}`,
+          `목표 길이: ${length}`,
+          "",
+          "작성 규칙:",
+          "- 실제 사람이 대화하듯 자연스럽게 작성합니다.",
+          "- 각 발화는 반드시 '이름: 대사' 형식으로 씁니다.",
+          "- 오프닝, 본문, 정리, 엔딩 흐름을 갖춥니다.",
+          "- [오프닝 음악 5초], [짧은 전환 음악 2초], [엔딩 음악 5초] 같은 큐는 필요한 곳에만 넣습니다.",
+          "- 원문에 없는 사실은 단정하지 말고, 자료상 확인되는 내용 중심으로 설명합니다.",
+          "- 듣는 사람이 이해하기 쉽게 예시, 질문, 비유, 핵심 정리를 섞습니다.",
+          "- 결과에는 스크립트 본문만 출력합니다. 설명, 마크다운 코드블록, 제목은 쓰지 않습니다.",
+          "",
+          "자료:",
+          source
+        ].join("\n");
+
+        const response = await fetch("https://api.openai.com/v1/responses", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${key}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model,
+            input: [
+              {
+                role: "developer",
+                content: [
+                  {
+                    type: "input_text",
+                    text: "You are an expert Korean podcast writer. Create grounded, natural, broadcast-ready dialogue from the user's material."
+                  }
+                ]
+              },
+              {
+                role: "user",
+                content: [
+                  {
+                    type: "input_text",
+                    text: prompt
+                  }
+                ]
+              }
+            ],
+            temperature: 0.8
+          })
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(text.slice(0, 260) || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const script = extractResponseText(data).replace(/^```[a-z]*\s*|\s*```$/g, "").trim();
+        if (!script) throw new Error("API 응답에서 스크립트를 읽지 못했습니다.");
+
+        scriptOutput.textContent = script;
+        updateStats();
+        audioBlob = null;
+        audioPlayer.removeAttribute("src");
+        downloadAudioBtn.disabled = true;
+        setStatus("API 스크립트가 생성되었습니다. 바로 API 더빙 생성/재생을 누르면 오디오를 만들 수 있습니다.");
+      } catch (error) {
+        setStatus(`API 스크립트 생성 실패: ${error.message}`);
+      } finally {
+        $("aiGenerateBtn").disabled = false;
+      }
+    }
+
+    function extractResponseText(data) {
+      if (typeof data.output_text === "string") return data.output_text;
+      const parts = [];
+      for (const item of data.output || []) {
+        for (const content of item.content || []) {
+          if (typeof content.text === "string") parts.push(content.text);
+          if (typeof content.output_text === "string") parts.push(content.output_text);
+        }
+      }
+      return parts.join("\n");
+    }
+
+    function getScript() {
+      return scriptOutput.textContent.trim();
+    }
+
+    function dialogueLines() {
+      const script = getScript();
+      const names = [($("hostA").value.trim() || "민지"), ($("hostB").value.trim() || "준호")];
+      const lines = [];
+      for (const raw of script.split(/\n+/)) {
+        const line = raw.trim();
+        if (!line || /^\[.+\]$/.test(line)) continue;
+        const match = line.match(/^([^:：]{1,20})[:：]\s*(.+)$/);
+        if (match) {
+          lines.push({ speaker: match[1].trim(), text: match[2].trim(), role: match[1].trim() === names[0] ? "a" : "b" });
+        } else {
+          lines.push({ speaker: names[0], text: line, role: "a" });
+        }
+      }
+      return lines;
+    }
+
+    function speakBrowser() {
+      const lines = dialogueLines();
+      if (!lines.length) {
+        setStatus("재생할 스크립트가 없습니다.");
+        return;
+      }
+      if (!("speechSynthesis" in window)) {
+        setStatus("이 브라우저는 음성 합성을 지원하지 않습니다.");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      spokenQueue = lines.slice();
+      speaking = true;
+      setStatus("브라우저 음성으로 재생 중입니다.");
+      speakNext();
+    }
+
+    function pickBrowserVoice(role) {
+      const select = role === "a" ? $("browserVoiceA") : $("browserVoiceB");
+      const selected = browserVoices.find((voice) => voice.voiceURI === select.value);
+      if (selected) return selected;
+      const ko = browserVoices.filter((v) => /^ko/i.test(v.lang));
+      if (ko.length) return ko[role === "a" ? 0 : Math.min(1, ko.length - 1)];
+      return browserVoices[role === "a" ? 0 : Math.min(1, browserVoices.length - 1)];
+    }
+
+    function speakNext() {
+      if (!speaking || spokenQueue.length === 0) {
+        speaking = false;
+        setStatus("브라우저 음성 재생이 끝났습니다.");
+        return;
+      }
+      const item = spokenQueue.shift();
+      const utter = new SpeechSynthesisUtterance(item.text);
+      utter.lang = "ko-KR";
+      utter.rate = Number($("speed").value || 0.95);
+      const pitchGap = Number($("pitchGap").value || 0.15);
+      utter.pitch = item.role === "a" ? 1 + pitchGap : Math.max(0.5, 1 - pitchGap);
+      const voice = pickBrowserVoice(item.role);
+      if (voice) {
+        utter.voice = voice;
+        utter.lang = voice.lang || "ko-KR";
+      }
+      utter.onend = speakNext;
+      utter.onerror = () => {
+        setStatus("브라우저 음성 재생 중 오류가 발생했습니다.");
+        speaking = false;
+      };
+      window.speechSynthesis.speak(utter);
+    }
+
+    function stopSpeech() {
+      speaking = false;
+      spokenQueue = [];
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+      setStatus("재생을 정지했습니다.");
+    }
+
+    async function generateTts() {
+      const key = $("apiKey").value.trim();
+      const lines = dialogueLines();
+      if (!lines.length) {
+        setStatus("먼저 스크립트를 생성하세요.");
+        return;
+      }
+      if (!key) {
+        setStatus("WAV 파일을 만들려면 API 키가 필요합니다.");
+        return;
+      }
+      $("ttsBtn").disabled = true;
+      downloadAudioBtn.disabled = true;
+      audioBlob = null;
+      try {
+        const wavs = [];
+        for (let i = 0; i < lines.length; i += 1) {
+          const item = lines[i];
+          setStatus(`TTS 생성 중 ${i + 1}/${lines.length}: ${item.speaker}`);
+          const wav = await requestSpeech(key, item.text, item.role === "a" ? $("voiceA").value : $("voiceB").value);
+          wavs.push(wav);
+        }
+        const merged = mergeWavs(wavs);
+        audioBlob = new Blob([merged], { type: "audio/wav" });
+        audioPlayer.src = URL.createObjectURL(audioBlob);
+        await audioPlayer.play().catch(() => {});
+        downloadAudioBtn.disabled = false;
+        setStatus("WAV 생성이 완료되었습니다. 페이지에서 재생하거나 파일로 저장할 수 있습니다.");
+      } catch (error) {
+        setStatus(`TTS 생성 실패: ${error.message}`);
+      } finally {
+        $("ttsBtn").disabled = false;
+      }
+    }
+
+    async function requestSpeech(apiKey, input, voice) {
+      const response = await fetch("https://api.openai.com/v1/audio/speech", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini-tts",
+          voice,
+          input,
+          instructions: "Korean podcast host. Natural pacing, clear diction, conversational but not exaggerated.",
+          response_format: "wav",
+          speed: Number($("speed").value || 0.95)
+        })
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text.slice(0, 240) || `HTTP ${response.status}`);
+      }
+      return new Uint8Array(await response.arrayBuffer());
+    }
+
+    function parseWav(bytes) {
+      const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+      const read = (offset, size) => String.fromCharCode(...bytes.slice(offset, offset + size));
+      if (read(0, 4) !== "RIFF" || read(8, 4) !== "WAVE") throw new Error("지원하지 않는 WAV 형식입니다.");
+      let offset = 12;
+      let fmt = null;
+      let data = null;
+      while (offset + 8 <= bytes.length) {
+        const id = read(offset, 4);
+        const size = view.getUint32(offset + 4, true);
+        const start = offset + 8;
+        if (id === "fmt ") {
+          fmt = {
+            audioFormat: view.getUint16(start, true),
+            channels: view.getUint16(start + 2, true),
+            sampleRate: view.getUint32(start + 4, true),
+            byteRate: view.getUint32(start + 8, true),
+            blockAlign: view.getUint16(start + 12, true),
+            bitsPerSample: view.getUint16(start + 14, true)
+          };
+        }
+        if (id === "data") data = bytes.slice(start, start + size);
+        offset = start + size + (size % 2);
+      }
+      if (!fmt || !data) throw new Error("WAV 데이터를 읽지 못했습니다.");
+      return { fmt, data };
+    }
+
+    function mergeWavs(wavs) {
+      const parsed = wavs.map(parseWav);
+      const fmt = parsed[0].fmt;
+      const pauseBytes = Math.floor(fmt.sampleRate * 0.22) * fmt.blockAlign;
+      const pause = new Uint8Array(pauseBytes);
+      const dataSize = parsed.reduce((sum, item, index) => sum + item.data.length + (index ? pause.length : 0), 0);
+      const output = new Uint8Array(44 + dataSize);
+      const view = new DataView(output.buffer);
+      writeString(output, 0, "RIFF");
+      view.setUint32(4, 36 + dataSize, true);
+      writeString(output, 8, "WAVE");
+      writeString(output, 12, "fmt ");
+      view.setUint32(16, 16, true);
+      view.setUint16(20, fmt.audioFormat, true);
+      view.setUint16(22, fmt.channels, true);
+      view.setUint32(24, fmt.sampleRate, true);
+      view.setUint32(28, fmt.byteRate, true);
+      view.setUint16(32, fmt.blockAlign, true);
+      view.setUint16(34, fmt.bitsPerSample, true);
+      writeString(output, 36, "data");
+      view.setUint32(40, dataSize, true);
+      let cursor = 44;
+      parsed.forEach((item, index) => {
+        if (index) {
+          output.set(pause, cursor);
+          cursor += pause.length;
+        }
+        output.set(item.data, cursor);
+        cursor += item.data.length;
+      });
+      return output;
+    }
+
+    function writeString(bytes, offset, value) {
+      for (let i = 0; i < value.length; i += 1) bytes[offset + i] = value.charCodeAt(i);
+    }
+
+    function downloadBlob(blob, name) {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = name;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    }
+
+    function updateStats() {
+      const raw = sourceText.value.trim();
+      const script = getScript();
+      statsEl.textContent = `원문 ${wordCount(raw)} 단어 · 스크립트 ${wordCount(script)} 단어`;
+    }
+
+    $("fileInput").addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      fileNameEl.textContent = file.name;
+      const text = await file.text();
+      sourceText.value = cleanText(text);
+      updateStats();
+      setStatus("파일을 불러왔습니다. 스크립트를 생성하세요.");
+    });
+
+    $("dropZone").addEventListener("dragover", (event) => {
+      event.preventDefault();
+      $("dropZone").style.borderColor = "var(--accent)";
+    });
+
+    $("dropZone").addEventListener("dragleave", () => {
+      $("dropZone").style.borderColor = "#a8b2ad";
+    });
+
+    $("dropZone").addEventListener("drop", async (event) => {
+      event.preventDefault();
+      $("dropZone").style.borderColor = "#a8b2ad";
+      const file = event.dataTransfer.files[0];
+      if (!file) return;
+      fileNameEl.textContent = file.name;
+      sourceText.value = cleanText(await file.text());
+      updateStats();
+      setStatus("파일을 불러왔습니다. 스크립트를 생성하세요.");
+    });
+
+    $("generateBtn").addEventListener("click", makeScript);
+    $("aiGenerateBtn").addEventListener("click", makeAiScript);
+    $("playSpeechBtn").addEventListener("click", speakBrowser);
+    $("stopSpeechBtn").addEventListener("click", stopSpeech);
+    $("ttsBtn").addEventListener("click", generateTts);
+
+    $("copyBtn").addEventListener("click", async () => {
+      const script = getScript();
+      if (!script) return setStatus("복사할 스크립트가 없습니다.");
+      await navigator.clipboard.writeText(script);
+      setStatus("스크립트를 클립보드에 복사했습니다.");
+    });
+
+    $("downloadScriptBtn").addEventListener("click", () => {
+      const script = getScript();
+      if (!script) return setStatus("저장할 스크립트가 없습니다.");
+      downloadBlob(new Blob([script], { type: "text/plain;charset=utf-8" }), "podcast-script.txt");
+    });
+
+    downloadAudioBtn.addEventListener("click", () => {
+      if (!audioBlob) return setStatus("저장할 오디오가 없습니다.");
+      downloadBlob(audioBlob, "podcast-audio.wav");
+    });
+
+    $("clearBtn").addEventListener("click", () => {
+      sourceText.value = "";
+      scriptOutput.textContent = "";
+      $("fileInput").value = "";
+      fileNameEl.textContent = "파일 없음";
+      audioBlob = null;
+      audioPlayer.removeAttribute("src");
+      downloadAudioBtn.disabled = true;
+      updateStats();
+      setStatus("초기화했습니다.");
+    });
+
+    $("sampleBtn").addEventListener("click", () => {
+      sourceText.value = `AI 기반 업무 자동화는 반복적인 문서 처리, 고객 응대, 데이터 요약 업무에서 가장 빠르게 확산되고 있다. 특히 조직 내부 지식이 흩어져 있을 때 검색과 요약을 결합한 도구는 의사결정 시간을 줄인다.
+
+하지만 자동화 도입은 단순히 도구를 구매하는 문제가 아니다. 업무 흐름을 먼저 정의하고, 사람이 검토해야 하는 지점과 모델이 처리해도 되는 지점을 나눠야 한다. 잘못된 데이터가 들어가면 결과 품질도 떨어지기 때문이다.
+
+성공적인 팀은 작은 업무부터 자동화한다. 예를 들어 회의록 초안 작성, 문의 분류, 주간 리포트 요약처럼 결과를 쉽게 검증할 수 있는 영역에서 시작한다. 이후 품질 기준과 책임 범위를 정하면서 점차 적용 범위를 넓힌다.
+
+가장 중요한 지표는 절약한 시간만이 아니다. 재작업 감소, 응답 속도, 고객 만족도, 직원이 더 가치 있는 일에 쓰는 시간도 함께 봐야 한다.`;
+      fileNameEl.textContent = "샘플 텍스트";
+      makeScript();
+    });
+
+    sourceText.addEventListener("input", updateStats);
+    scriptOutput.addEventListener("input", updateStats);
+
+    function buildMeter() {
+      const meter = $("meter");
+      for (let i = 0; i < 36; i += 1) {
+        const bar = document.createElement("span");
+        bar.style.setProperty("--i", i);
+        bar.style.setProperty("--h", `${24 + ((i * 17) % 68)}%`);
+        meter.appendChild(bar);
+      }
+    }
+
+    function populateBrowserVoices() {
+      if (!("speechSynthesis" in window)) {
+        $("browserVoiceA").innerHTML = '<option value="">지원 안 됨</option>';
+        $("browserVoiceB").innerHTML = '<option value="">지원 안 됨</option>';
+        return;
+      }
+      browserVoices = window.speechSynthesis.getVoices();
+      const sorted = browserVoices.slice().sort((left, right) => {
+        const leftKo = /^ko/i.test(left.lang) ? 0 : 1;
+        const rightKo = /^ko/i.test(right.lang) ? 0 : 1;
+        return leftKo - rightKo || left.lang.localeCompare(right.lang) || left.name.localeCompare(right.name);
+      });
+      const options = sorted.length
+        ? sorted.map((voice) => `<option value="${escapeHtml(voice.voiceURI)}">${escapeHtml(voice.name)} · ${escapeHtml(voice.lang)}${voice.default ? " · 기본" : ""}</option>`).join("")
+        : '<option value="">음성 로드 대기 중</option>';
+      $("browserVoiceA").innerHTML = options;
+      $("browserVoiceB").innerHTML = options;
+
+      const ko = sorted.filter((voice) => /^ko/i.test(voice.lang));
+      const aVoice = ko[0] || sorted[0];
+      const bVoice = ko[1] || sorted[1] || ko[0] || sorted[0];
+      if (aVoice) $("browserVoiceA").value = aVoice.voiceURI;
+      if (bVoice) $("browserVoiceB").value = bVoice.voiceURI;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    buildMeter();
+    populateBrowserVoices();
+    updateStats();
+    if ("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = populateBrowserVoices;
+  </script>
+</body>
+</html>
