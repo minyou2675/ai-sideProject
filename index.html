@@ -268,6 +268,43 @@
         box-shadow: 80px 0 0 rgba(255, 255, 255, 0.72);
       }
 
+      .preview.data {
+        background:
+          linear-gradient(135deg, rgba(37, 99, 235, 0.16), transparent 46%),
+          linear-gradient(225deg, rgba(15, 118, 110, 0.16), transparent 42%),
+          #f4f7fb;
+      }
+
+      .preview.data::before {
+        content: "";
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        top: 50px;
+        height: 52px;
+        display: block;
+        background:
+          linear-gradient(180deg, #2563eb 0 0) left 0 bottom 0 / 11% 40% no-repeat,
+          linear-gradient(180deg, #0f766e 0 0) left 18% bottom 0 / 11% 68% no-repeat,
+          linear-gradient(180deg, #2563eb 0 0) left 36% bottom 0 / 11% 50% no-repeat,
+          linear-gradient(180deg, #0f766e 0 0) left 54% bottom 0 / 11% 86% no-repeat,
+          linear-gradient(180deg, #2563eb 0 0) left 72% bottom 0 / 11% 60% no-repeat,
+          linear-gradient(180deg, #0f766e 0 0) left 90% bottom 0 / 11% 74% no-repeat;
+      }
+
+      .preview.data::after {
+        content: "";
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        top: 24px;
+        height: 10px;
+        border-radius: 999px;
+        background: #ffffff;
+        border: 1px solid var(--line);
+        box-shadow: 0 18px 0 rgba(255, 255, 255, 0.6);
+      }
+
       .preview.pixel {
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
@@ -497,6 +534,20 @@
             </div>
           </a>
 
+          <a class="app-card" href="./data-domain-onboarding.html">
+            <div class="preview data" aria-hidden="true"></div>
+            <div class="card-body">
+              <div class="tag">Study Guide</div>
+              <h2>Data Engineering 학습지</h2>
+              <p class="description">
+                비전공자를 위한 데이터 엔지니어링 입문서입니다. DB·트랜잭션
+                기초부터 라이프사이클, 클라우드 인프라, 비즈니스 가치까지
+                개념과 예시로 정리했습니다.
+              </p>
+              <div class="launch">열기 <span aria-hidden="true">›</span></div>
+            </div>
+          </a>
+
           <a class="app-card" href="./podcast-studio.html">
             <div class="preview podcast" aria-hidden="true"></div>
             <div class="card-body">
@@ -532,12 +583,10 @@
           </p>
           <pre><code>tech_study/
 ├─ index.html
-├─ coding-interview-practice/
-│  └─ index.html
-├─ podcast-studio/
-│  └─ index.html
-└─ pixel-sprite-studio/
-   └─ index.html</code></pre>
+├─ coding-interview-practice.html
+├─ data-domain-onboarding.html
+├─ podcast-studio.html
+└─ pixel-sprite-studio.html</code></pre>
           <div class="note">
             <strong>링크 기준</strong>
             <span
@@ -551,8 +600,8 @@
       <footer>
         <span>Static portal for GitHub Pages</span>
         <code
-          >./coding-interview-practice/ · ./podcast-studio/ ·
-          ./pixel-sprite-studio/</code
+          >./coding-interview-practice.html · ./data-domain-onboarding.html ·
+          ./podcast-studio.html · ./pixel-sprite-studio.html</code
         >
       </footer>
     </div>
