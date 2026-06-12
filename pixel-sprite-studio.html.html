@@ -1,0 +1,1096 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pixel Sprite Studio</title>
+  <style>
+    :root {
+      --bg: #101316;
+      --panel: #181d22;
+      --panel-2: #20262d;
+      --line: #303841;
+      --text: #edf2f4;
+      --muted: #9ba7b2;
+      --accent: #58c4b8;
+      --accent-2: #f3b454;
+      --danger: #ff6b6b;
+      --ok: #78d982;
+      --shadow: 0 18px 40px rgba(0, 0, 0, .32);
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.025), transparent 280px),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(360px, 480px) 1fr;
+      gap: 18px;
+      width: min(1480px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 20px 0 24px;
+    }
+
+    header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 56px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 180px;
+      min-height: 36px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .status.busy { color: var(--accent-2); }
+    .status.ok { color: var(--ok); }
+    .status.fail { color: var(--danger); }
+
+    .controls, .preview {
+      min-width: 0;
+      border: 1px solid var(--line);
+      background: rgba(24, 29, 34, .92);
+      box-shadow: var(--shadow);
+      border-radius: 8px;
+    }
+
+    .controls {
+      padding: 16px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .group {
+      display: grid;
+      gap: 10px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .group:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .group-title {
+      margin: 0;
+      color: #dce5ea;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 10px 11px;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 96px;
+      line-height: 1.45;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88, 196, 184, .16);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .chip input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .chip span {
+      padding: 8px 11px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .chip:has(input:checked) {
+      border-color: var(--accent);
+      background: rgba(88, 196, 184, .14);
+    }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .theme {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: left;
+      cursor: pointer;
+      min-height: 72px;
+    }
+
+    .theme.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88, 196, 184, .12);
+    }
+
+    .theme strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .swatches {
+      display: flex;
+      gap: 5px;
+    }
+
+    .swatches i {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,.2);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .button {
+      border: 1px solid transparent;
+      border-radius: 8px;
+      min-height: 42px;
+      padding: 10px 12px;
+      background: var(--accent);
+      color: #061412;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    .button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .preview {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 720px;
+      overflow: hidden;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+      padding: 12px;
+      background: rgba(32, 38, 45, .72);
+    }
+
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-2);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .icon-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+    .stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 0;
+      padding: 18px;
+      overflow: auto;
+      background-color: #11161b;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,.045) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255,255,255,.045) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(255,255,255,.045) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,.045) 75%);
+      background-size: 24px 24px;
+      background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+    }
+
+    canvas {
+      image-rendering: pixelated;
+      max-width: none;
+      background: transparent;
+    }
+
+    .empty {
+      width: min(620px, 100%);
+      border: 1px dashed #42505b;
+      border-radius: 8px;
+      padding: 28px;
+      color: var(--muted);
+      text-align: center;
+      background: rgba(16, 19, 22, .72);
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      border-top: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .meta div {
+      min-height: 58px;
+      background: var(--panel);
+      padding: 10px 12px;
+    }
+
+    .meta span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .meta strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 15px;
+    }
+
+    .prompt-box {
+      min-height: 160px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .grid-overlay {
+      position: absolute;
+      pointer-events: none;
+      border: 1px solid rgba(88,196,184,.7);
+      display: none;
+    }
+
+    .grid-overlay.show { display: block; }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; width: min(100vw - 20px, 760px); }
+      header { align-items: start; flex-direction: column; }
+      .preview { min-height: 620px; }
+      .meta { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 540px) {
+      .row, .actions, .theme-grid { grid-template-columns: 1fr; }
+      .meta { grid-template-columns: 1fr; }
+      .toolbar { align-items: stretch; }
+      .toolbar-left, .toolbar-right { width: 100%; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <h1>Pixel Sprite Studio</h1>
+        <p class="subtitle">4방향 32비트 도트 캐릭터, UI 세트, 테마 일관성을 한 번에 생성</p>
+      </div>
+      <div id="status" class="status">대기 중</div>
+    </header>
+
+    <section class="controls" aria-label="생성 설정">
+      <div class="group">
+        <p class="group-title">API</p>
+        <label>
+          OpenAI API Key
+          <input id="apiKey" type="password" autocomplete="off" placeholder="sk-...">
+        </label>
+        <div class="row">
+          <label>
+            모델
+            <select id="model">
+              <option value="gpt-image-2">gpt-image-2</option>
+              <option value="gpt-image-1">gpt-image-1</option>
+            </select>
+          </label>
+          <label>
+            품질
+            <select id="quality">
+              <option value="high">high</option>
+              <option value="medium" selected>medium</option>
+              <option value="low">low</option>
+            </select>
+          </label>
+        </div>
+        <p class="hint">키는 이 HTML 안에서만 사용됩니다. 브라우저에서 직접 API를 호출하므로 공개 배포용 서비스에는 서버 프록시를 두는 편이 안전합니다.</p>
+      </div>
+
+      <div class="group">
+        <p class="group-title">캐릭터</p>
+        <label>
+          캐릭터 설명
+          <textarea id="character">검은 단발머리의 신입 기사, 작은 철검과 짙은 녹색 망토, 귀엽지만 단단한 인상</textarea>
+        </label>
+        <div class="row">
+          <label>
+            캐릭터 타입
+            <select id="characterType">
+              <option>도트 캐릭터</option>
+              <option>몬스터</option>
+              <option>NPC</option>
+              <option>보스</option>
+              <option>펫/소환수</option>
+            </select>
+          </label>
+          <label>
+            해상도 단위
+            <select id="frameSize">
+              <option value="32">32 x 32</option>
+              <option value="48">48 x 48</option>
+              <option value="64" selected>64 x 64</option>
+              <option value="96">96 x 96</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="group">
+        <p class="group-title">테마</p>
+        <div id="themes" class="theme-grid"></div>
+        <label>
+          추가 스타일 지시
+          <input id="extraStyle" placeholder="예: 약간 어두운 판타지, 아웃라인 두껍게">
+        </label>
+      </div>
+
+      <div class="group">
+        <p class="group-title">방향과 모션</p>
+        <div class="chips" id="directions"></div>
+        <p class="hint">Unity slicing 기준: 행은 방향, 열은 모션 프레임 순서입니다.</p>
+        <div class="chips" id="motions"></div>
+        <div class="row">
+          <label>
+            모션당 프레임
+            <select id="framesPerMotion">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4" selected>4</option>
+            </select>
+          </label>
+          <label>
+            출력 크기
+            <select id="imageSize">
+              <option value="1024x1024" selected>1024 x 1024</option>
+              <option value="1536x1024">1536 x 1024</option>
+              <option value="1024x1536">1024 x 1536</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="group">
+        <p class="group-title">생성물 종류</p>
+        <div class="chips" id="assetTypes"></div>
+        <p class="hint">캐릭터 외 UI까지 선택하면 같은 팔레트로 버튼, 아이콘, 상태창 요소를 같은 시트 안에 포함하도록 프롬프트를 구성합니다.</p>
+      </div>
+
+      <div class="group">
+        <p class="group-title">프롬프트</p>
+        <textarea id="prompt" class="prompt-box" readonly></textarea>
+        <div class="actions">
+          <button id="copyPrompt" class="button secondary" type="button">프롬프트 복사</button>
+          <button id="sample" class="button secondary" type="button">샘플 미리보기</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="generate" class="button" type="button">이미지 생성</button>
+        <button id="reset" class="button secondary" type="button">초기화</button>
+      </div>
+    </section>
+
+    <section class="preview" aria-label="미리보기">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <button id="zoomOut" class="icon-btn" type="button" title="축소">-</button>
+          <button id="zoomIn" class="icon-btn" type="button" title="확대">+</button>
+          <button id="toggleGrid" class="icon-btn" type="button" title="그리드">#</button>
+          <span id="zoomLabel" class="status">100%</span>
+        </div>
+        <div class="toolbar-right">
+          <button id="downloadPng" class="button secondary" type="button" disabled>PNG 다운로드</button>
+          <button id="downloadJson" class="button secondary" type="button" disabled>Unity JSON</button>
+        </div>
+      </div>
+      <div id="stage" class="stage">
+        <div id="empty" class="empty">설정을 고른 뒤 샘플 미리보기 또는 이미지 생성을 실행하세요.</div>
+        <canvas id="canvas" hidden></canvas>
+        <div id="gridOverlay" class="grid-overlay"></div>
+      </div>
+      <div class="meta">
+        <div><span>방향</span><strong id="metaDirections">4</strong></div>
+        <div><span>모션</span><strong id="metaMotions">8</strong></div>
+        <div><span>총 셀</span><strong id="metaCells">128</strong></div>
+        <div><span>프레임</span><strong id="metaFrame">64 px</strong></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const THEMES = [
+      {
+        id: "forest",
+        name: "Forest Quest",
+        colors: ["#263f2c", "#5f8f4f", "#c7d68f", "#e7c16b"],
+        prompt: "cozy forest fantasy RPG, moss green, warm gold, carved wood UI, readable chunky silhouettes"
+      },
+      {
+        id: "dungeon",
+        name: "Iron Dungeon",
+        colors: ["#15191f", "#46515f", "#9aa7b2", "#c55b4b"],
+        prompt: "stone dungeon action RPG, iron gray, muted red accents, gritty but readable UI, crisp rim lighting"
+      },
+      {
+        id: "arcade",
+        name: "Neon Arcade",
+        colors: ["#11131f", "#2bd6c4", "#f45bc4", "#ffe66b"],
+        prompt: "neon arcade cyber fantasy, teal and magenta highlights, bright HUD UI, clean black outlines"
+      },
+      {
+        id: "cozy",
+        name: "Cozy Village",
+        colors: ["#2e3440", "#81a684", "#e2c275", "#d98f70"],
+        prompt: "cozy village life sim, soft natural palette, friendly rounded UI shapes, gentle contrast"
+      },
+      {
+        id: "ice",
+        name: "Frost Relic",
+        colors: ["#15212b", "#5db7de", "#d6f2ff", "#8d73c7"],
+        prompt: "ancient frost temple, icy cyan, pale highlights, violet magic accents, crystalline UI ornaments"
+      },
+      {
+        id: "desert",
+        name: "Sunforge",
+        colors: ["#202329", "#b26e3c", "#f0c269", "#5b8c8a"],
+        prompt: "desert forge adventure, copper, sun gold, teal patina accents, sturdy metal and leather UI"
+      }
+    ];
+
+    const DIRECTIONS = ["front", "back", "left", "right"];
+    const MOTIONS = [
+      ["idle", "대기"],
+      ["walk", "걷기"],
+      ["run", "달리기"],
+      ["attack_slash", "공격"],
+      ["attack_heavy", "강공격"],
+      ["cast", "시전"],
+      ["hit", "피격"],
+      ["death", "사망"],
+      ["dash", "대시"],
+      ["guard", "방어"],
+      ["jump", "점프"],
+      ["interact", "상호작용"],
+      ["victory", "승리"],
+      ["sit", "앉기"],
+      ["pickup", "줍기"],
+      ["emote", "감정표현"]
+    ];
+
+    const ASSET_TYPES = [
+      ["character_sheet", "캐릭터 시트", true],
+      ["basic_ui", "기본 UI", true],
+      ["icons", "아이콘", true],
+      ["theme_tiles", "테마 타일", false],
+      ["portraits", "초상화", false]
+    ];
+
+    const els = {
+      apiKey: document.getElementById("apiKey"),
+      model: document.getElementById("model"),
+      quality: document.getElementById("quality"),
+      character: document.getElementById("character"),
+      characterType: document.getElementById("characterType"),
+      frameSize: document.getElementById("frameSize"),
+      extraStyle: document.getElementById("extraStyle"),
+      framesPerMotion: document.getElementById("framesPerMotion"),
+      imageSize: document.getElementById("imageSize"),
+      themes: document.getElementById("themes"),
+      directions: document.getElementById("directions"),
+      motions: document.getElementById("motions"),
+      assetTypes: document.getElementById("assetTypes"),
+      prompt: document.getElementById("prompt"),
+      status: document.getElementById("status"),
+      generate: document.getElementById("generate"),
+      reset: document.getElementById("reset"),
+      sample: document.getElementById("sample"),
+      copyPrompt: document.getElementById("copyPrompt"),
+      canvas: document.getElementById("canvas"),
+      empty: document.getElementById("empty"),
+      stage: document.getElementById("stage"),
+      gridOverlay: document.getElementById("gridOverlay"),
+      zoomIn: document.getElementById("zoomIn"),
+      zoomOut: document.getElementById("zoomOut"),
+      toggleGrid: document.getElementById("toggleGrid"),
+      zoomLabel: document.getElementById("zoomLabel"),
+      downloadPng: document.getElementById("downloadPng"),
+      downloadJson: document.getElementById("downloadJson"),
+      metaDirections: document.getElementById("metaDirections"),
+      metaMotions: document.getElementById("metaMotions"),
+      metaCells: document.getElementById("metaCells"),
+      metaFrame: document.getElementById("metaFrame")
+    };
+
+    let activeTheme = THEMES[0];
+    let zoom = 1;
+    let currentImageUrl = "";
+    let currentBlob = null;
+    let gridVisible = false;
+    let lastMeta = null;
+
+    function init() {
+      renderThemes();
+      renderChecks(els.directions, DIRECTIONS.map(v => [v, directionLabel(v), true]), "direction");
+      renderChecks(els.motions, MOTIONS, "motion", 8);
+      renderChecks(els.assetTypes, ASSET_TYPES, "asset");
+      bind();
+      updatePrompt();
+      updateMeta();
+    }
+
+    function directionLabel(value) {
+      return { front: "앞", back: "뒤", left: "좌", right: "우" }[value] || value;
+    }
+
+    function renderThemes() {
+      els.themes.innerHTML = "";
+      THEMES.forEach(theme => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "theme" + (theme.id === activeTheme.id ? " active" : "");
+        button.innerHTML = `<strong>${theme.name}</strong><div class="swatches">${theme.colors.map(c => `<i style="background:${c}"></i>`).join("")}</div>`;
+        button.addEventListener("click", () => {
+          activeTheme = theme;
+          renderThemes();
+          updatePrompt();
+        });
+        els.themes.appendChild(button);
+      });
+    }
+
+    function renderChecks(root, items, name, defaultCount) {
+      root.innerHTML = "";
+      items.forEach((item, index) => {
+        const value = item[0];
+        const label = item[1];
+        const checked = item[2] === true || (Number.isInteger(defaultCount) && index < defaultCount);
+        const chip = document.createElement("label");
+        chip.className = "chip";
+        chip.innerHTML = `<input type="checkbox" name="${name}" value="${value}" ${checked ? "checked" : ""}><span>${label}</span>`;
+        root.appendChild(chip);
+      });
+    }
+
+    function bind() {
+      document.querySelectorAll("input, select, textarea").forEach(el => {
+        el.addEventListener("input", () => {
+          updatePrompt();
+          updateMeta();
+          updateGridOverlay();
+        });
+        el.addEventListener("change", () => {
+          updatePrompt();
+          updateMeta();
+          updateGridOverlay();
+        });
+      });
+      els.generate.addEventListener("click", generateImage);
+      els.reset.addEventListener("click", resetAll);
+      els.sample.addEventListener("click", drawSample);
+      els.copyPrompt.addEventListener("click", copyPrompt);
+      els.zoomIn.addEventListener("click", () => setZoom(Math.min(4, zoom + .25)));
+      els.zoomOut.addEventListener("click", () => setZoom(Math.max(.25, zoom - .25)));
+      els.toggleGrid.addEventListener("click", () => {
+        gridVisible = !gridVisible;
+        updateGridOverlay();
+      });
+      els.downloadPng.addEventListener("click", downloadPng);
+      els.downloadJson.addEventListener("click", downloadJson);
+    }
+
+    function selected(name) {
+      return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(input => input.value);
+    }
+
+    function buildMeta() {
+      const directions = selected("direction");
+      const motions = selected("motion");
+      const assets = selected("asset");
+      const frameSize = parseInt(els.frameSize.value, 10);
+      const framesPerMotion = parseInt(els.framesPerMotion.value, 10);
+      const columns = Math.max(1, motions.length * framesPerMotion);
+      const rows = Math.max(1, directions.length);
+      const cells = columns * rows;
+      return {
+        app: "Pixel Sprite Studio",
+        generatedAt: new Date().toISOString(),
+        theme: activeTheme.name,
+        characterType: els.characterType.value,
+        frameSize,
+        framesPerMotion,
+        directions,
+        motions,
+        assets,
+        layout: {
+          rows,
+          columns,
+          cellWidth: frameSize,
+          cellHeight: frameSize,
+          order: "Rows are directions. For each direction, columns are motion groups, each with framesPerMotion frames."
+        },
+        unity: {
+          spriteMode: "Multiple",
+          pixelsPerUnit: frameSize,
+          filterMode: "Point",
+          compression: "None",
+          pivot: "Bottom Center"
+        }
+      };
+    }
+
+    function updateMeta() {
+      const meta = buildMeta();
+      const motionCount = meta.motions.length;
+      const directionCount = meta.directions.length;
+      const totalCells = Math.max(16, directionCount * motionCount * meta.framesPerMotion);
+      els.metaDirections.textContent = directionCount;
+      els.metaMotions.textContent = motionCount;
+      els.metaCells.textContent = totalCells;
+      els.metaFrame.textContent = `${meta.frameSize} px`;
+      lastMeta = meta;
+    }
+
+    function updatePrompt() {
+      const meta = buildMeta();
+      const motionNames = meta.motions.map(v => MOTIONS.find(m => m[0] === v)?.[1] || v).join(", ");
+      const assetNames = meta.assets.map(v => ASSET_TYPES.find(a => a[0] === v)?.[1] || v).join(", ");
+      const minCells = Math.max(16, meta.directions.length * meta.motions.length * meta.framesPerMotion);
+      const extra = els.extraStyle.value.trim();
+      els.prompt.value =
+`Create a production-ready 32-bit pixel art sprite sheet for Unity.
+
+Subject:
+- ${els.characterType.value}: ${els.character.value.trim() || "original game character"}
+
+Theme:
+- ${activeTheme.name}
+- Palette and style: ${activeTheme.prompt}
+${extra ? `- Extra style: ${extra}` : ""}
+
+Sprite sheet requirements:
+- Orthographic 2D pixel art, transparent background, no shadows outside cells.
+- Four-direction compatible character presentation using selected directions: ${meta.directions.join(", ")}.
+- Include selected motions: ${motionNames}.
+- ${meta.framesPerMotion} animation frame(s) per motion, arranged left to right.
+- Minimum ${minCells} clean animation cells.
+- Each cell should read as ${meta.frameSize}x${meta.frameSize} pixel game art with consistent scale.
+- Use a strict grid: rows are directions, columns are motion frames grouped by motion.
+- Keep the same character proportions, outfit, colors, weapon, and silhouette in every frame.
+- Pixel-perfect hard edges, limited palette, crisp readable outline, no painterly blur, no anti-aliased text.
+- Leave small transparent padding inside every cell so Unity slicing is easy.
+
+Additional game assets:
+- ${assetNames}.
+- If UI assets are included, make buttons, panels, icons, HP/MP bars, item slots, and cursor elements match the same theme and palette.
+- Keep UI elements separated on grid cells with transparent background.
+
+Do not include labels, captions, watermarks, mockup frames, perspective camera views, or background scenery.`;
+    }
+
+    function readApiKey() {
+      const key = els.apiKey.value
+        .replace(/[\u200B-\u200D\uFEFF]/g, "")
+        .replace(/\s+/g, "")
+        .trim();
+      els.apiKey.value = key;
+      if (/[^\x20-\x7E]/.test(key)) {
+        throw new Error("API 키에 영문/숫자/기호가 아닌 문자가 섞여 있습니다. 키만 다시 붙여넣어 주세요.");
+      }
+      return key;
+    }
+
+    async function generateImage() {
+      let key = "";
+      try {
+        key = readApiKey();
+      } catch (error) {
+        setStatus(error.message, "fail");
+        return;
+      }
+      if (!key) {
+        setStatus("API 키가 필요합니다", "fail");
+        return;
+      }
+      updatePrompt();
+      updateMeta();
+      setBusy(true);
+      setStatus("이미지 생성 중", "busy");
+      try {
+        const payload = {
+          model: els.model.value,
+          prompt: els.prompt.value,
+          size: els.imageSize.value,
+          quality: els.quality.value,
+          n: 1
+        };
+        const response = await fetch("https://api.openai.com/v1/images/generations", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${key}`
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data.error?.message || `HTTP ${response.status}`);
+        }
+        const b64 = data.data?.[0]?.b64_json;
+        const url = data.data?.[0]?.url;
+        if (b64) {
+          const blob = base64ToBlob(b64, "image/png");
+          await showBlob(blob);
+        } else if (url) {
+          const imageResponse = await fetch(url);
+          const blob = await imageResponse.blob();
+          await showBlob(blob);
+        } else {
+          throw new Error("이미지 응답을 찾지 못했습니다.");
+        }
+        setStatus("생성 완료", "ok");
+      } catch (error) {
+        setStatus(error.message, "fail");
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    function base64ToBlob(base64, type) {
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new Blob([bytes], { type });
+    }
+
+    async function showBlob(blob) {
+      if (currentImageUrl) URL.revokeObjectURL(currentImageUrl);
+      currentBlob = blob;
+      currentImageUrl = URL.createObjectURL(blob);
+      const image = await loadImage(currentImageUrl);
+      const ctx = els.canvas.getContext("2d");
+      els.canvas.width = image.naturalWidth;
+      els.canvas.height = image.naturalHeight;
+      ctx.clearRect(0, 0, els.canvas.width, els.canvas.height);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(image, 0, 0);
+      els.empty.hidden = true;
+      els.canvas.hidden = false;
+      els.downloadPng.disabled = false;
+      els.downloadJson.disabled = false;
+      setZoom(1);
+      updateGridOverlay();
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error("이미지를 읽을 수 없습니다."));
+        image.src = src;
+      });
+    }
+
+    function drawSample() {
+      updateMeta();
+      const meta = buildMeta();
+      const width = Math.min(1536, Math.max(512, meta.layout.columns * meta.frameSize));
+      const height = Math.min(1536, Math.max(512, meta.layout.rows * meta.frameSize));
+      const ctx = els.canvas.getContext("2d");
+      els.canvas.width = width;
+      els.canvas.height = height;
+      ctx.imageSmoothingEnabled = false;
+      ctx.clearRect(0, 0, width, height);
+      drawChecker(ctx, width, height);
+
+      const cellW = width / meta.layout.columns;
+      const cellH = height / meta.layout.rows;
+      const palette = activeTheme.colors;
+      for (let r = 0; r < meta.layout.rows; r++) {
+        for (let c = 0; c < meta.layout.columns; c++) {
+          const x = c * cellW;
+          const y = r * cellH;
+          ctx.strokeStyle = "rgba(88,196,184,.35)";
+          ctx.strokeRect(Math.floor(x) + .5, Math.floor(y) + .5, Math.floor(cellW), Math.floor(cellH));
+          drawPixelFigure(ctx, x, y, cellW, cellH, palette, r, c);
+        }
+      }
+      els.empty.hidden = true;
+      els.canvas.hidden = false;
+      currentBlob = null;
+      currentImageUrl = "";
+      els.downloadPng.disabled = false;
+      els.downloadJson.disabled = false;
+      setZoom(1);
+      updateGridOverlay();
+      setStatus("샘플 미리보기", "ok");
+    }
+
+    function drawChecker(ctx, width, height) {
+      ctx.fillStyle = "#14191e";
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = "#1d242b";
+      const size = 16;
+      for (let y = 0; y < height; y += size) {
+        for (let x = 0; x < width; x += size) {
+          if (((x + y) / size) % 2 === 0) ctx.fillRect(x, y, size, size);
+        }
+      }
+    }
+
+    function drawPixelFigure(ctx, x, y, w, h, palette, row, col) {
+      const unit = Math.max(2, Math.floor(Math.min(w, h) / 16));
+      const cx = Math.floor(x + w / 2);
+      const base = Math.floor(y + h * .78);
+      const bob = (col % 4) * unit * .25;
+      ctx.fillStyle = "#101316";
+      rect(ctx, cx - 3 * unit, base - 9 * unit - bob, 6 * unit, 8 * unit);
+      ctx.fillStyle = palette[1];
+      rect(ctx, cx - 2 * unit, base - 8 * unit - bob, 4 * unit, 5 * unit);
+      ctx.fillStyle = palette[2];
+      rect(ctx, cx - 2 * unit, base - 12 * unit - bob, 4 * unit, 4 * unit);
+      ctx.fillStyle = palette[0];
+      rect(ctx, cx - 3 * unit, base - 13 * unit - bob, 6 * unit, 2 * unit);
+      ctx.fillStyle = palette[3];
+      rect(ctx, cx + (row === 2 ? -5 : 3) * unit, base - 8 * unit - bob, unit, 6 * unit);
+      ctx.fillStyle = palette[0];
+      rect(ctx, cx - 2 * unit, base - 3 * unit, unit, 3 * unit);
+      rect(ctx, cx + unit, base - 3 * unit, unit, 3 * unit);
+    }
+
+    function rect(ctx, x, y, w, h) {
+      ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+    }
+
+    function setZoom(next) {
+      zoom = next;
+      els.canvas.style.width = `${els.canvas.width * zoom}px`;
+      els.canvas.style.height = `${els.canvas.height * zoom}px`;
+      els.zoomLabel.textContent = `${Math.round(zoom * 100)}%`;
+      updateGridOverlay();
+    }
+
+    function updateGridOverlay() {
+      els.gridOverlay.classList.toggle("show", gridVisible && !els.canvas.hidden);
+      if (!gridVisible || els.canvas.hidden) return;
+      const rect = els.canvas.getBoundingClientRect();
+      const stageRect = els.stage.getBoundingClientRect();
+      const meta = buildMeta();
+      els.gridOverlay.style.left = `${rect.left - stageRect.left + els.stage.scrollLeft}px`;
+      els.gridOverlay.style.top = `${rect.top - stageRect.top + els.stage.scrollTop}px`;
+      els.gridOverlay.style.width = `${rect.width}px`;
+      els.gridOverlay.style.height = `${rect.height}px`;
+      const colPct = 100 / meta.layout.columns;
+      const rowPct = 100 / meta.layout.rows;
+      els.gridOverlay.style.backgroundImage =
+        `linear-gradient(to right, rgba(88,196,184,.55) 1px, transparent 1px),
+         linear-gradient(to bottom, rgba(88,196,184,.55) 1px, transparent 1px)`;
+      els.gridOverlay.style.backgroundSize = `${colPct}% ${rowPct}%`;
+    }
+
+    function downloadPng() {
+      if (currentBlob) {
+        downloadBlob(currentBlob, filename("sprite-sheet", "png"));
+        return;
+      }
+      els.canvas.toBlob(blob => downloadBlob(blob, filename("sample-sprite-sheet", "png")), "image/png");
+    }
+
+    function downloadJson() {
+      const meta = buildMeta();
+      meta.image = {
+        width: els.canvas.width || null,
+        height: els.canvas.height || null,
+        recommendedSliceWidth: els.canvas.width ? Math.floor(els.canvas.width / meta.layout.columns) : meta.frameSize,
+        recommendedSliceHeight: els.canvas.height ? Math.floor(els.canvas.height / meta.layout.rows) : meta.frameSize
+      };
+      downloadBlob(new Blob([JSON.stringify(meta, null, 2)], { type: "application/json" }), filename("unity-sprite-meta", "json"));
+    }
+
+    function downloadBlob(blob, name) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 500);
+    }
+
+    function filename(base, ext) {
+      const slug = activeTheme.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      return `${base}-${slug}-${Date.now()}.${ext}`;
+    }
+
+    async function copyPrompt() {
+      updatePrompt();
+      try {
+        await navigator.clipboard.writeText(els.prompt.value);
+        setStatus("프롬프트 복사됨", "ok");
+      } catch {
+        els.prompt.select();
+        document.execCommand("copy");
+        setStatus("프롬프트 복사됨", "ok");
+      }
+    }
+
+    function resetAll() {
+      activeTheme = THEMES[0];
+      els.character.value = "검은 단발머리의 신입 기사, 작은 철검과 짙은 녹색 망토, 귀엽지만 단단한 인상";
+      els.characterType.value = "도트 캐릭터";
+      els.frameSize.value = "64";
+      els.extraStyle.value = "";
+      els.framesPerMotion.value = "4";
+      els.imageSize.value = "1024x1024";
+      renderThemes();
+      renderChecks(els.directions, DIRECTIONS.map(v => [v, directionLabel(v), true]), "direction");
+      renderChecks(els.motions, MOTIONS, "motion", 8);
+      renderChecks(els.assetTypes, ASSET_TYPES, "asset");
+      updatePrompt();
+      updateMeta();
+      setStatus("초기화 완료", "ok");
+    }
+
+    function setStatus(text, type) {
+      els.status.textContent = text;
+      els.status.className = `status ${type || ""}`;
+    }
+
+    function setBusy(isBusy) {
+      els.generate.disabled = isBusy;
+      els.generate.textContent = isBusy ? "생성 중..." : "이미지 생성";
+    }
+
+    init();
+  </script>
+</body>
+</html>
