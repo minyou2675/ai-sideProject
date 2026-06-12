@@ -458,6 +458,20 @@
       gap: 12px;
     }
 
+    .practice-layout {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .problem-list {
+      grid-template-columns: 1fr;
+      max-height: calc(100vh - 154px);
+      overflow: auto;
+      padding-right: 2px;
+    }
+
     .card {
       display: grid;
       grid-template-rows: auto auto minmax(84px, 1fr) auto;
@@ -468,6 +482,15 @@
       border-radius: var(--radius);
       background: #fff;
       box-shadow: 0 8px 18px rgba(16, 24, 40, 0.05);
+    }
+
+    .card.selected {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12), 0 8px 18px rgba(16, 24, 40, 0.05);
+    }
+
+    .card[data-open] {
+      cursor: pointer;
     }
 
     .card header {
@@ -527,6 +550,222 @@
 
     .details b {
       color: #111827;
+    }
+
+    .workspace-panel {
+      min-width: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .workspace-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+
+    .workspace-head h3 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .workspace-head p {
+      margin: 6px 0 0;
+      color: #344054;
+      font-size: 13px;
+    }
+
+    .workspace-body {
+      display: grid;
+      gap: 14px;
+      padding: 14px;
+    }
+
+    .workspace-section {
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .workspace-section h4 {
+      margin: 0;
+      padding: 10px 12px;
+      border-bottom: 1px solid #edf1f5;
+      background: #f8fafc;
+      font-size: 13px;
+      color: #243042;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .workspace-section .section-content {
+      padding: 12px;
+      color: #344054;
+      font-size: 13px;
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .concept-tile {
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius);
+      background: #f8fafc;
+      min-height: 104px;
+    }
+
+    .concept-tile b {
+      display: block;
+      margin-bottom: 6px;
+      color: #111827;
+      font-size: 13px;
+    }
+
+    .concept-tile p {
+      margin: 0;
+      color: #475467;
+      font-size: 13px;
+    }
+
+    .solution-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .solution-list li {
+      margin: 4px 0;
+    }
+
+    .editor-shell {
+      overflow: hidden;
+      border: 1px solid #1f2937;
+      border-radius: var(--radius);
+      background: #0b1220;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      background: #111827;
+      color: #dbeafe;
+      font-size: 12px;
+    }
+
+    .editor-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .code-editor {
+      width: 100%;
+      min-height: 360px;
+      display: block;
+      resize: vertical;
+      padding: 14px;
+      border: 0;
+      outline: none;
+      background: #0b1220;
+      color: #dbeafe;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.58;
+      tab-size: 4;
+      white-space: pre;
+      overflow: auto;
+    }
+
+    .api-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 1.1fr) minmax(140px, 0.6fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .check-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #475467;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .feedback-box {
+      display: grid;
+      gap: 10px;
+      min-height: 140px;
+      padding: 12px;
+      border: 1px solid #d7dde5;
+      border-radius: var(--radius);
+      background: #f8fafc;
+      color: #344054;
+      font-size: 13px;
+    }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 68px;
+      min-height: 36px;
+      padding: 6px 10px;
+      border-radius: var(--radius);
+      background: #111827;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .feedback-card {
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .feedback-card b {
+      display: block;
+      margin-bottom: 6px;
+      color: #111827;
+    }
+
+    .feedback-card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .callout {
+      padding: 10px 12px;
+      border: 1px solid #bfdbfe;
+      border-left-width: 4px;
+      border-radius: var(--radius);
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-size: 13px;
     }
 
     .code-grid {
@@ -673,6 +912,69 @@
       font-size: 12px;
     }
 
+    details.details summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #1d4ed8;
+      user-select: none;
+    }
+
+    details.details[open] summary {
+      margin-bottom: 8px;
+    }
+
+    .hint-details {
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius);
+      background: #f8fafc;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #344054;
+    }
+
+    .hint-details summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #1d4ed8;
+      user-select: none;
+    }
+
+    .hint-details[open] summary {
+      margin-bottom: 8px;
+      color: #111827;
+    }
+
+    .hint-details p {
+      margin: 0;
+    }
+
+    .review-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-top: 1px solid #edf1f5;
+      font-size: 13px;
+    }
+
+    .review-item:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .review-item .review-meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .record-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     @media (max-width: 1160px) {
       .app {
         grid-template-columns: 230px minmax(0, 1fr);
@@ -681,6 +983,15 @@
       .cards,
       .grid.cols-3,
       .chapter-map {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .practice-layout {
+        grid-template-columns: 320px minmax(0, 1fr);
+      }
+
+      .concept-grid,
+      .feedback-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
@@ -707,11 +1018,21 @@
       .grid.cols-2,
       .code-grid,
       .filters,
+      .practice-layout,
+      .workspace-head,
+      .api-grid,
       .timer {
         grid-template-columns: 1fr;
       }
 
+      .problem-list {
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
+      }
+
       .toolbar,
+      .editor-actions,
       .timer-controls {
         justify-content: flex-start;
       }
@@ -719,6 +1040,8 @@
       .stats,
       .schedule,
       .cards,
+      .concept-grid,
+      .feedback-grid,
       .grid.cols-3,
       .chapter-map {
         grid-template-columns: 1fr;
@@ -823,6 +1146,10 @@
           <p id="pageSubtitle">면접 프로세스부터 Hard 문제까지 한 화면에서 회전 학습합니다.</p>
         </div>
         <div class="toolbar">
+          <button class="action" type="button" id="topTimerToggle" title="타이머 시작/일시정지 (Notes 탭과 동기화)">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l3 2"></path><path d="M9 2h6"></path></svg>
+            <span id="topTimerText">25:00</span>
+          </button>
           <button class="action" type="button" id="copyPlan" title="오늘 루틴 복사">
             <svg class="icon" viewBox="0 0 24 24"><path d="M8 8h11v13H8z"></path><path d="M5 16H4a1 1 0 0 1-1-1V4h12v1"></path></svg>
             오늘 루틴
@@ -854,6 +1181,12 @@
               <span>인터뷰용 문법 기준</span>
             </div>
           </div>
+
+          <section class="panel pad">
+            <h3>오늘의 복습 큐</h3>
+            <p style="margin:0 0 10px; font-size:13px;">문제를 풀고 결과를 기록하면 간격 반복(혼자 해결 +7일, 힌트 사용 +3일, 해설 학습 +1일)으로 여기에 다시 나타납니다. 복습 시점에 다시 풀어야 장기 기억으로 넘어갑니다.</p>
+            <div id="reviewQueue"></div>
+          </section>
 
           <div class="grid cols-2">
             <section class="panel pad">
@@ -1122,6 +1455,65 @@ public static void main(String[] args) {
             <tr><td>Heap</td><td>top k, streaming median, merge k sorted</td><td>PriorityQueue</td><td>Comparator에서 뺄셈 비교는 overflow 가능, Integer.compare 사용</td></tr>
           </tbody>
         </table>
+
+        <div class="grid cols-2" style="margin-top: 14px;">
+          <section class="panel pad">
+            <h3>Big O 치트시트: Java 자료구조 연산</h3>
+            <table class="pattern-table">
+              <thead>
+                <tr><th>자료구조</th><th>접근</th><th>탐색</th><th>삽입/삭제</th><th>비고</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>배열 (int[])</td><td>O(1)</td><td>O(n)</td><td>O(n)</td><td>크기 고정, 캐시 친화적</td></tr>
+                <tr><td>ArrayList</td><td>O(1)</td><td>O(n)</td><td>끝 O(1)*, 중간 O(n)</td><td>* amortized, 중간 삽입은 shift 비용</td></tr>
+                <tr><td>LinkedList</td><td>O(n)</td><td>O(n)</td><td>참조 보유 시 O(1)</td><td>인터뷰에서는 직접 ListNode 구현이 일반적</td></tr>
+                <tr><td>HashMap / HashSet</td><td>-</td><td>O(1)*</td><td>O(1)*</td><td>* 평균. equals/hashCode 계약 준수 필수</td></tr>
+                <tr><td>TreeMap / TreeSet</td><td>-</td><td>O(log n)</td><td>O(log n)</td><td>정렬 유지, floorKey/ceilingKey 제공</td></tr>
+                <tr><td>PriorityQueue</td><td>peek O(1)</td><td>O(n)</td><td>offer/poll O(log n)</td><td>top k, median 문제의 기본 도구</td></tr>
+                <tr><td>ArrayDeque</td><td>양끝 O(1)</td><td>O(n)</td><td>양끝 O(1)</td><td>Stack/Queue 둘 다 이걸로 (java.util.Stack 비권장)</td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section class="panel pad">
+            <h3>Big O 치트시트: 알고리즘</h3>
+            <table class="pattern-table">
+              <thead>
+                <tr><th>알고리즘</th><th>시간</th><th>공간</th><th>비고</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Binary Search</td><td>O(log n)</td><td>O(1)</td><td>정렬 또는 단조 조건 전제</td></tr>
+                <tr><td>Arrays.sort (primitive)</td><td>O(n log n)</td><td>O(log n)</td><td>dual-pivot quicksort, 최악 O(n²) 이론상 존재</td></tr>
+                <tr><td>Arrays.sort (Object) / list.sort</td><td>O(n log n)</td><td>O(n)</td><td>TimSort, stable</td></tr>
+                <tr><td>DFS / BFS</td><td>O(V + E)</td><td>O(V)</td><td>재귀 DFS는 스택 깊이도 공간</td></tr>
+                <tr><td>Topological Sort</td><td>O(V + E)</td><td>O(V)</td><td>indegree + queue</td></tr>
+                <tr><td>Dijkstra (PQ)</td><td>O(E log V)</td><td>O(V)</td><td>음수 간선 불가</td></tr>
+                <tr><td>Union-Find</td><td>O(α(n)) ≈ O(1)</td><td>O(n)</td><td>path compression + rank 기준</td></tr>
+                <tr><td>Heap build</td><td>O(n)</td><td>O(n)</td><td>n번 offer는 O(n log n), heapify는 O(n)</td></tr>
+                <tr><td>String concat in loop</td><td>O(n²)</td><td>-</td><td>StringBuilder로 O(n)</td></tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+
+        <section class="panel pad" style="margin-top: 14px;">
+          <h3>입력 크기로 목표 복잡도 거꾸로 잡기</h3>
+          <p style="font-size: 13px;">제약 조건의 n을 보면 어떤 복잡도까지 허용되는지 역산할 수 있습니다. 1초에 대략 10^8번의 단순 연산이 기준입니다.</p>
+          <table class="pattern-table">
+            <thead>
+              <tr><th>n 범위</th><th>허용 복잡도</th><th>후보 접근</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>n ≤ 12</td><td>O(n!)</td><td>순열 완전 탐색</td></tr>
+              <tr><td>n ≤ 20~25</td><td>O(2ⁿ)</td><td>부분집합 enumeration, bitmask DP, 백트래킹</td></tr>
+              <tr><td>n ≤ 100</td><td>O(n³)</td><td>Floyd-Warshall, 3중 루프 DP</td></tr>
+              <tr><td>n ≤ 3,000</td><td>O(n²)</td><td>2중 루프, LIS 기본형, 구간 DP</td></tr>
+              <tr><td>n ≤ 10⁵ ~ 10⁶</td><td>O(n log n)</td><td>정렬, heap, binary search, sweep</td></tr>
+              <tr><td>n ≥ 10⁷</td><td>O(n) 또는 O(log n)</td><td>해싱, two pointers, prefix sum, 수학적 공식</td></tr>
+            </tbody>
+          </table>
+          <p class="footer-note">면접에서 "제약이 어떻게 되나요?"를 먼저 묻는 이유가 이 표입니다. n이 작으면 완전 탐색이 정답일 수 있고, n이 크면 O(n²)은 시작 전에 배제됩니다.</p>
+        </section>
       </section>
 
       <section class="tab-panel" id="drill" data-title="Problem Drill" data-subtitle="책의 챕터 순서를 따르되 문제 문장은 새로 만든 Java 연습 세트입니다.">
@@ -1142,7 +1534,10 @@ public static void main(String[] args) {
             Reset
           </button>
         </div>
-        <div class="cards" id="problemCards"></div>
+        <div class="practice-layout">
+          <div class="cards problem-list" id="problemCards"></div>
+          <section class="workspace-panel" id="problemWorkspace" aria-live="polite"></section>
+        </div>
       </section>
 
       <section class="tab-panel" id="design" data-title="Design & Knowledge" data-subtitle="OOD, System Design, DB, Testing, Threads 답변을 압축 정리했습니다.">
@@ -1336,9 +1731,73 @@ public static void main(String[] args) {
 
     const doneKey = "ctci-java-drill.done";
     const notesKey = "ctci-java-drill.notes";
+    const selectedKey = "ctci-java-drill.selected";
+    const draftPrefix = "ctci-java-drill.draft.";
+    const feedbackPrefix = "ctci-java-drill.feedback.";
+    const apiKeyStorageKey = "ctci-java-drill.openai-key";
+    const modelStorageKey = "ctci-java-drill.model";
     let doneSet = new Set(JSON.parse(localStorage.getItem(doneKey) || "[]"));
+    let selectedProblemId = localStorage.getItem(selectedKey) || problems[0].id;
     let timerRemaining = 25 * 60;
     let timerId = null;
+
+    const reviewsKey = "ctci-java-drill.reviews";
+    const hintsPrefix = "ctci-java-drill.hints.";
+    const reviewLabels = { solo: "혼자 해결", hinted: "힌트 사용", studied: "해설 학습" };
+    let reviews = {};
+    try { reviews = JSON.parse(localStorage.getItem(reviewsKey) || "{}"); } catch { reviews = {}; }
+
+    function saveReviews() {
+      localStorage.setItem(reviewsKey, JSON.stringify(reviews));
+    }
+
+    function todayStr(offsetDays = 0) {
+      const d = new Date();
+      d.setDate(d.getDate() + offsetDays);
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${d.getFullYear()}-${month}-${day}`;
+    }
+
+    function recordResult(id, type) {
+      const days = { solo: 7, hinted: 3, studied: 1 }[type] || 3;
+      reviews[id] = { type, last: todayStr(), next: todayStr(days) };
+      saveReviews();
+      doneSet.add(id);
+      saveDone();
+      updateProgress();
+      renderProblems();
+      renderWorkspace();
+      renderReviewQueue();
+    }
+
+    function reviewStatusText(id) {
+      const review = reviews[id];
+      const hintLevel = Number(localStorage.getItem(hintsPrefix + id) || 0);
+      const hintText = hintLevel === 0 ? "연 힌트 없음" : hintLevel >= 4 ? "해설까지 열람" : `힌트 ${hintLevel}단계까지 열람`;
+      if (!review) return `아직 기록이 없습니다. (${hintText})`;
+      return `마지막 기록: ${reviewLabels[review.type] || review.type} · ${review.last} → 다음 복습 ${review.next} (${hintText})`;
+    }
+
+    function renderReviewQueue() {
+      const root = document.getElementById("reviewQueue");
+      if (!root) return;
+      const today = todayStr();
+      const due = problems.filter((p) => reviews[p.id] && reviews[p.id].next <= today);
+      if (due.length === 0) {
+        root.innerHTML = '<p class="footer-note" style="margin-top:0;">오늘 복습할 문제가 없습니다. Problem Drill에서 문제를 풀고 Result &amp; Review에 결과를 기록해 보세요.</p>';
+        return;
+      }
+      root.innerHTML = due.map((p) => `
+        <div class="review-item">
+          <div>
+            <b>${p.title}</b>
+            <div class="review-meta">${p.chapter} · ${reviewLabels[reviews[p.id].type] || ""} 기록(${reviews[p.id].last}) 이후 복습 시점이 되었습니다.</div>
+          </div>
+          <button class="mini-button" type="button" data-review-open="${p.id}">다시 풀기</button>
+        </div>
+      `).join("");
+    }
 
     function saveDone() {
       localStorage.setItem(doneKey, JSON.stringify([...doneSet]));
@@ -1346,6 +1805,206 @@ public static void main(String[] args) {
 
     function iconCheck() {
       return '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>';
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function currentProblem() {
+      return problems.find((p) => p.id === selectedProblemId) || problems[0];
+    }
+
+    function draftKey(id) {
+      return `${draftPrefix}${id}`;
+    }
+
+    function feedbackKey(id) {
+      return `${feedbackPrefix}${id}`;
+    }
+
+    function getStoredApiKey() {
+      return localStorage.getItem(apiKeyStorageKey) || sessionStorage.getItem(apiKeyStorageKey) || "";
+    }
+
+    function patternConcept(problem) {
+      const pattern = problem.pattern.toLowerCase();
+      if (pattern.includes("sliding")) return "고정 또는 가변 구간을 유지하면서 오른쪽 포인터로 확장하고, 조건이 깨질 때 왼쪽 포인터로 줄입니다. 빈도 배열과 현재 위반 수를 같이 관리하면 매번 구간을 다시 검사하지 않아도 됩니다.";
+      if (pattern.includes("two pointers")) return "양끝 또는 같은 방향의 두 포인터가 각자 맡은 경계를 좁힙니다. 정렬, palindrome, 구간 압축 문제에서 불필요한 중첩 반복을 줄일 때 가장 먼저 검토합니다.";
+      if (pattern.includes("hashmap") || pattern.includes("hash")) return "값을 바로 찾기 어려운 관계를 key로 바꿔 O(1)에 가깝게 조회합니다. 빈도, prefix sum, canonical signature, index mapping처럼 문제의 비교 기준을 key로 고정하는 것이 핵심입니다.";
+      if (pattern.includes("bfs")) return "상태를 레벨 순서로 확장하므로 최소 단계와 최단 거리 문제에 맞습니다. 중복 삽입을 막기 위해 enqueue 시점에 방문 처리합니다.";
+      if (pattern.includes("dfs") || pattern.includes("post-order")) return "부분 문제의 답을 자식에서 부모로 올려보내거나, 선택/원복을 통해 탐색 공간을 순회합니다. base case와 반환값 의미를 먼저 고정해야 코드가 짧아집니다.";
+      if (pattern.includes("topological")) return "선행 조건을 indegree로 표현하고, indegree가 0인 노드부터 제거합니다. 처리한 노드 수가 전체보다 작으면 cycle입니다.";
+      if (pattern.includes("binary")) return "정렬된 공간이나 답의 경계에서 feasible 여부가 단조롭게 바뀔 때 씁니다. [lo, hi) 같은 구간 의미를 끝까지 유지하면 off-by-one을 줄일 수 있습니다.";
+      if (pattern.includes("dp") || pattern.includes("dynamic")) return "중복되는 부분 문제를 state로 이름 붙이고, base case와 transition을 명확히 적습니다. 재귀 memo로 먼저 생각한 뒤 bottom-up으로 바꾸면 구현이 안정적입니다.";
+      if (pattern.includes("heap") || pattern.includes("priorityqueue")) return "항상 가장 크거나 작은 후보만 필요할 때 전체 정렬을 피합니다. Java에서는 PriorityQueue와 Comparator가 핵심이며, 비교식에서 뺄셈 overflow를 피합니다.";
+      if (pattern.includes("stack")) return "최근 후보를 보관하거나 단조성을 유지할 때 씁니다. 값보다 인덱스를 저장하면 거리, 폭, 원래 값을 모두 복원하기 쉽습니다.";
+      if (pattern.includes("lock") || pattern.includes("thread")) return "공유 상태의 원자성, 가시성, lock 획득 순서를 분리해서 설명합니다. deadlock은 획득 순서를 통일하고 finally에서 unlock을 보장합니다.";
+      if (pattern.includes("system") || pattern.includes("api") || pattern.includes("transaction")) return "요구사항, 데이터 모델, 병목, 실패 처리를 분리해 설계합니다. 코딩 문제처럼 정답 하나를 찾기보다 tradeoff를 일관되게 방어하는 것이 핵심입니다.";
+      return `${problem.pattern} 패턴은 문제의 반복 구조를 명확히 줄이는 도구입니다. ${problem.hook}를 중심으로 불변식을 잡고, ${problem.trap}를 먼저 테스트 케이스에 넣습니다.`;
+    }
+
+    function exampleFor(problem) {
+      const examples = {
+        "arr-1": { input: 's = "abcaef", k = 3', output: "0", walk: '"abc"는 길이 3이고 중복이 없으므로 시작 인덱스 0을 반환합니다. right가 이동할 때 freq와 duplicate 수를 갱신합니다.' },
+        "arr-2": { input: 's = "abca"', output: "true", walk: "b 또는 c를 제거하면 palindrome이 됩니다. 첫 불일치 지점에서 양쪽 제거를 각각 검사합니다." },
+        "arr-3": { input: '["eat", "tea", "tan", "ate"]', output: '[["ate","eat","tea"], ["tan"]]', walk: "각 단어를 26칸 빈도 signature로 바꿔 같은 key끼리 묶고 그룹 내부를 정렬합니다." },
+        "list-1": { input: "1 -> 2 -> 3 -> 4, k = 2", output: "3", walk: "fast를 2칸 먼저 보낸 뒤 slow와 같이 움직이면 fast가 끝에 닿을 때 slow가 답입니다." },
+        "stack-2": { input: "[73, 74, 75, 71, 69, 72]", output: "[1, 1, 0, 2, 1, 0]", walk: "현재 온도가 stack top보다 높으면 top 인덱스의 대기일을 확정합니다." },
+        "tree-1": { input: "root = [3,9,20,null,null,15,7]", output: "true", walk: "각 노드에서 왼쪽/오른쪽 높이를 받고 차이가 1보다 크면 -1을 전파합니다." },
+        "tree-3": { input: "n = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]", output: "[0,1,2,3]", walk: "0의 indegree가 0이라 먼저 처리하고, 연결된 노드의 indegree를 낮춥니다." },
+        "dp-2": { input: 's = "catsanddog", dict = ["cat","cats","and","sand","dog"]', output: "2", walk: "prefix 길이 i까지의 방법 수를 dp[i]에 저장하고, 끝나는 단어 후보만 확인합니다." },
+        "sort-1": { input: "bad = [false,false,true,true]", output: "2", walk: "[lo, hi)에서 mid가 true면 hi를 줄이고, false면 lo를 mid + 1로 보냅니다." },
+        "moderate-1": { input: "nums = [1,2,3,-2,2], target = 3", output: "4", walk: "현재 prefix sum에서 target을 뺀 값이 이전에 몇 번 나왔는지 누적합니다." },
+        "hard-1": { input: "stream = [5, 2, 8, 1]", output: "5, 3.5, 5, 3.5", walk: "작은 절반은 max heap, 큰 절반은 min heap에 두고 크기 균형을 유지합니다." }
+      };
+      return examples[problem.id] || {
+        input: "작은 입력을 직접 정의",
+        output: "기대한 결과를 먼저 적기",
+        walk: `${problem.pattern}로 상태를 갱신하면서 ${problem.trap} 상황을 포함한 케이스를 손으로 추적합니다.`
+      };
+    }
+
+    function solutionOutline(problem) {
+      return [
+        `입력 제약을 확인하고 ${problem.hook} 자료구조를 선택합니다.`,
+        `${problem.pattern}의 불변식을 한 문장으로 정합니다.`,
+        "가장 작은 입력, 중복/경계 입력, 답이 없는 입력을 먼저 통과시킵니다.",
+        `${problem.trap}를 별도 테스트로 고정합니다.`,
+        "마지막에 시간복잡도와 추가 공간복잡도를 말합니다."
+      ];
+    }
+
+    function starterCode(problem) {
+      const saved = localStorage.getItem(draftKey(problem.id));
+      if (saved) return saved;
+      const safeTitle = problem.title.replaceAll("*/", "");
+      if (problem.chapter === "Linked Lists") {
+        return `class Solution {
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int val) { this.val = val; }
+    }
+
+    /*
+     * ${safeTitle}
+     * ${problem.prompt}
+     */
+    public ListNode solve(ListNode head) {
+        // TODO: pointer invariant를 먼저 정리하세요.
+        return head;
+    }
+}`;
+      }
+      if (problem.chapter === "Trees and Graphs") {
+        return `import java.util.*;
+
+class Solution {
+    static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode(int val) { this.val = val; }
+    }
+
+    /*
+     * ${safeTitle}
+     * ${problem.prompt}
+     */
+    public Object solve() {
+        // TODO: visited/base case/return value를 먼저 고정하세요.
+        return null;
+    }
+}`;
+      }
+      return `import java.util.*;
+
+class Solution {
+    /*
+     * ${safeTitle}
+     * ${problem.prompt}
+     */
+    public Object solve() {
+        // TODO: ${problem.pattern}
+        return null;
+    }
+}`;
+    }
+
+    function referenceSketch(problem) {
+      const pattern = problem.pattern.toLowerCase();
+      if (pattern.includes("prefix sum")) {
+        return `Map<Integer, Integer> freq = new HashMap<>();
+freq.put(0, 1);
+int sum = 0, answer = 0;
+for (int x : nums) {
+    sum += x;
+    answer += freq.getOrDefault(sum - target, 0);
+    freq.put(sum, freq.getOrDefault(sum, 0) + 1);
+}`;
+      }
+      if (pattern.includes("binary")) {
+        return `int lo = 0, hi = n;
+while (lo < hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (ok(mid)) hi = mid;
+    else lo = mid + 1;
+}
+return lo;`;
+      }
+      if (pattern.includes("bfs")) {
+        return `Queue<Integer> q = new ArrayDeque<>();
+boolean[] seen = new boolean[n];
+q.offer(start);
+seen[start] = true;
+while (!q.isEmpty()) {
+    int cur = q.poll();
+    for (int next : graph.get(cur)) {
+        if (!seen[next]) {
+            seen[next] = true;
+            q.offer(next);
+        }
+    }
+}`;
+      }
+      if (pattern.includes("dp")) {
+        return `int[] dp = new int[n + 1];
+dp[0] = 1;
+for (int i = 1; i <= n; i++) {
+    for (Choice choice : choices) {
+        if (canUse(choice, i)) {
+            dp[i] += dp[i - cost(choice)];
+        }
+    }
+}`;
+      }
+      if (pattern.includes("stack")) {
+        return `Deque<Integer> stack = new ArrayDeque<>();
+for (int i = 0; i < nums.length; i++) {
+    while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
+        int j = stack.pop();
+        answer[j] = i - j;
+    }
+    stack.push(i);
+}`;
+      }
+      if (pattern.includes("hash")) {
+        return `Map<String, Integer> count = new HashMap<>();
+for (String value : values) {
+    String key = buildKey(value);
+    count.put(key, count.getOrDefault(key, 0) + 1);
+}`;
+      }
+      return `// Reference sketch
+// 1. State the invariant for: ${problem.pattern}
+// 2. Implement with: ${problem.hook}
+// 3. Test trap case: ${problem.trap}`;
     }
 
     function renderChapters() {
@@ -1394,8 +2053,9 @@ public static void main(String[] args) {
       }
       root.innerHTML = list.map((p) => {
         const done = doneSet.has(p.id);
+        const selected = p.id === selectedProblemId;
         return `
-          <article class="card" data-card-id="${p.id}">
+          <article class="card ${selected ? "selected" : ""}" data-card-id="${p.id}" data-open="${p.id}">
             <header>
               <div>
                 <h3>${p.title}</h3>
@@ -1410,22 +2070,338 @@ public static void main(String[] args) {
               </button>
             </header>
             <div class="prompt">${p.prompt}</div>
-            <div class="details">
+            <details class="details">
+              <summary>힌트 보기 (Pattern · Hook · Trap)</summary>
               <div><b>Pattern:</b> ${p.pattern}</div>
               <div><b>Java hook:</b> ${p.hook}</div>
               <div><b>Trap:</b> ${p.trap}</div>
-            </div>
+            </details>
             <footer>
               <span class="tag">${estimateMinutes(p.difficulty)} min</span>
-              <button class="mini-button" type="button" data-focus="${p.id}" title="이 문제만 보기">Focus</button>
+              <button class="mini-button" type="button" data-open="${p.id}" title="문제 열기">Solve</button>
             </footer>
           </article>
         `;
       }).join("");
     }
 
+    function renderWorkspace() {
+      const problem = currentProblem();
+      const example = exampleFor(problem);
+      const outline = solutionOutline(problem);
+      const model = localStorage.getItem(modelStorageKey) || "gpt-5.5";
+      const apiKey = getStoredApiKey();
+      const remembered = Boolean(localStorage.getItem(apiKeyStorageKey));
+      const storedFeedback = readFeedback(problem.id);
+      document.getElementById("problemWorkspace").innerHTML = `
+        <div class="workspace-head">
+          <div>
+            <div class="tag-row" style="margin-bottom: 8px;">
+              <span class="tag ${difficultyClass(problem.difficulty)}">${problem.difficulty}</span>
+              <span class="tag">${problem.chapter}</span>
+              <span class="tag">${estimateMinutes(problem.difficulty)} min</span>
+            </div>
+            <h3>${escapeHtml(problem.title)}</h3>
+            <p>${escapeHtml(problem.prompt)}</p>
+          </div>
+          <button class="mini-button ${doneSet.has(problem.id) ? "done" : ""}" type="button" data-toggle="${problem.id}">
+            ${doneSet.has(problem.id) ? iconCheck() : ""}
+            ${doneSet.has(problem.id) ? "Done" : "Mark"}
+          </button>
+        </div>
+        <div class="workspace-body">
+          <section class="workspace-section">
+            <h4>Hints — 단계적 공개</h4>
+            <div class="section-content">
+              <p style="margin: 0 0 10px; color: #475467; font-size: 13px;">바로 열지 말고 먼저 접근을 스스로 설계해 보세요. 연 힌트 단계는 기록되어 아래 결과 기록과 복습 추천에 반영됩니다.</p>
+              <details class="hint-details" data-hint-problem="${problem.id}" data-hint-level="1">
+                <summary>힌트 1 · 어떤 패턴 계열인가</summary>
+                <p><b>${escapeHtml(problem.pattern)}</b> — ${escapeHtml(patternConcept(problem))}</p>
+              </details>
+              <details class="hint-details" data-hint-problem="${problem.id}" data-hint-level="2">
+                <summary>힌트 2 · Java 구현 도구</summary>
+                <p>${escapeHtml(problem.hook)}</p>
+              </details>
+              <details class="hint-details" data-hint-problem="${problem.id}" data-hint-level="3">
+                <summary>힌트 3 · 함정 케이스</summary>
+                <p>${escapeHtml(problem.trap)}</p>
+              </details>
+            </div>
+          </section>
+
+          <section class="workspace-section">
+            <h4>Example Walkthrough</h4>
+            <div class="section-content">
+              <ul class="compact-list">
+                <li><span class="key">Input</span><span class="value">${escapeHtml(example.input)}</span></li>
+                <li><span class="key">Output</span><span class="value">${escapeHtml(example.output)}</span></li>
+                <li><span class="key">Trace</span><span class="value">${escapeHtml(example.walk)}</span></li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="workspace-section">
+            <h4>Solution</h4>
+            <div class="section-content">
+              <details class="hint-details" data-hint-problem="${problem.id}" data-hint-level="4">
+                <summary>해설 보기 — 먼저 직접 구현을 시도한 뒤 여세요</summary>
+                <ol class="solution-list">
+                  ${outline.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
+                </ol>
+                <div class="snippet" style="margin-top: 12px;">
+                  <h3>Reference sketch <span class="tag ${difficultyClass(problem.difficulty)}">${problem.pattern}</span></h3>
+                  <pre><code>${escapeHtml(referenceSketch(problem))}</code></pre>
+                </div>
+              </details>
+            </div>
+          </section>
+
+          <section class="workspace-section">
+            <h4>IDE</h4>
+            <div class="section-content">
+              <div class="editor-shell">
+                <div class="editor-toolbar">
+                  <span>Solution.java</span>
+                  <span>${escapeHtml(problem.id)}</span>
+                </div>
+                <textarea class="code-editor" id="codeEditor" data-problem-id="${problem.id}" spellcheck="false">${escapeHtml(starterCode(problem))}</textarea>
+              </div>
+              <div class="editor-actions" style="margin-top: 10px;">
+                <button class="action" type="button" data-reset-code="${problem.id}">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v6h6"></path></svg>
+                  Reset Code
+                </button>
+                <button class="action" type="button" data-static-check="${problem.id}">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"></path></svg>
+                  Local Check
+                </button>
+              </div>
+              <div class="feedback-box" id="localCheckBox" style="margin-top: 10px;">로컬 체크는 Java를 실행하지 않고, 코드 형태와 흔한 누락만 빠르게 확인합니다.</div>
+            </div>
+          </section>
+
+          <section class="workspace-section">
+            <h4>OpenAI Feedback</h4>
+            <div class="section-content">
+              <div class="callout">제출 채점은 브라우저에서 OpenAI Responses API로 직접 요청합니다. API key는 입력한 브라우저에만 보관되며, Remember를 켠 경우에만 localStorage에 저장됩니다.</div>
+              <div class="api-grid" style="margin-top: 10px;">
+                <input class="field" id="apiKeyInput" type="password" autocomplete="off" placeholder="OpenAI API key" value="${escapeHtml(apiKey)}">
+                <input class="field" id="modelInput" type="text" value="${escapeHtml(model)}" aria-label="OpenAI model">
+                <label class="check-row"><input id="rememberKeyInput" type="checkbox" ${remembered ? "checked" : ""}> Remember</label>
+              </div>
+              <div class="editor-actions" style="margin-top: 10px;">
+                <button class="action" type="button" data-save-api="${problem.id}">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5V3h11l3 3z"></path><path d="M17 21v-8H7v8"></path><path d="M7 3v5h8"></path></svg>
+                  Save API
+                </button>
+                <button class="action primary" type="button" data-submit-code="${problem.id}">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M22 2L11 13"></path><path d="M22 2l-7 20-4-9-9-4z"></path></svg>
+                  Submit
+                </button>
+              </div>
+              <div class="feedback-box" id="feedbackBox" style="margin-top: 10px;">${storedFeedback ? renderFeedback(storedFeedback) : "아직 채점 결과가 없습니다. 코드를 작성하고 Submit을 누르면 점수, 복잡도, 버그 가능성, 개선 코드를 받습니다."}</div>
+            </div>
+          </section>
+
+          <section class="workspace-section">
+            <h4>Result &amp; Review — 간격 반복 기록</h4>
+            <div class="section-content">
+              <p style="margin: 0 0 10px; color: #475467; font-size: 13px;">풀이를 마쳤으면 결과를 기록하세요. 기록 유형에 따라 복습 주기가 달라지고, 대시보드 복습 큐에 다시 나타납니다.</p>
+              <div class="record-row">
+                <button class="action" type="button" data-record="solo" data-record-id="${problem.id}">혼자 해결 → 7일 뒤 복습</button>
+                <button class="action" type="button" data-record="hinted" data-record-id="${problem.id}">힌트 사용 → 3일 뒤 복습</button>
+                <button class="action" type="button" data-record="studied" data-record-id="${problem.id}">해설 학습 → 1일 뒤 복습</button>
+              </div>
+              <p class="footer-note">${reviewStatusText(problem.id)}</p>
+            </div>
+          </section>
+        </div>
+      `;
+    }
+
+    function readFeedback(id) {
+      const raw = localStorage.getItem(feedbackKey(id));
+      if (!raw) return null;
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function renderFeedback(feedback) {
+      const list = (items) => Array.isArray(items) && items.length
+        ? `<ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+        : "<p>없음</p>";
+      return `
+        <div class="tag-row">
+          <span class="score-badge">${escapeHtml(feedback.score ?? "-")} / 100</span>
+          <span>${escapeHtml(feedback.verdict || "채점 결과")}</span>
+        </div>
+        <div><b>Complexity:</b> ${escapeHtml(feedback.complexity || "분석 없음")}</div>
+        <div class="feedback-grid">
+          <div class="feedback-card"><b>Strengths</b>${list(feedback.strengths)}</div>
+          <div class="feedback-card"><b>Issues</b>${list(feedback.issues)}</div>
+          <div class="feedback-card"><b>Suggestions</b>${list(feedback.suggestions)}</div>
+          <div class="feedback-card"><b>Edge cases</b>${list(feedback.edgeCases)}</div>
+        </div>
+        ${feedback.improvedCode ? `<div class="snippet"><h3>Improved code</h3><pre><code>${escapeHtml(feedback.improvedCode)}</code></pre></div>` : ""}
+      `;
+    }
+
     function estimateMinutes(level) {
       return { Easy: 15, Medium: 25, Advanced: 40, Hard: 55 }[level] || 25;
+    }
+
+    function currentEditorCode() {
+      return document.getElementById("codeEditor")?.value || "";
+    }
+
+    function saveCurrentDraft() {
+      const editor = document.getElementById("codeEditor");
+      if (editor) localStorage.setItem(draftKey(editor.dataset.problemId), editor.value);
+    }
+
+    function runStaticCheck() {
+      const problem = currentProblem();
+      const code = currentEditorCode();
+      const checks = [];
+      const openBraces = (code.match(/\{/g) || []).length;
+      const closeBraces = (code.match(/\}/g) || []).length;
+      if (code.trim().length < 80) checks.push("코드가 너무 짧습니다. 접근 방식이 드러나도록 최소 메서드와 핵심 로직을 작성하세요.");
+      if (!/class\s+\w+/.test(code)) checks.push("Java 제출 형태라면 class 선언을 포함하는 편이 안전합니다.");
+      if (!/(public|private|protected)?\s*(static\s+)?[\w<>\[\]]+\s+\w+\s*\(/.test(code)) checks.push("풀이 메서드가 보이지 않습니다. solve 또는 문제에 맞는 메서드를 추가하세요.");
+      if (openBraces !== closeBraces) checks.push(`중괄호 개수가 맞지 않습니다. { ${openBraces}개, } ${closeBraces}개입니다.`);
+      if (/TODO|return null;/.test(code)) checks.push("TODO 또는 임시 return이 남아 있습니다.");
+      if (problem.pattern.toLowerCase().includes("hash") && !/HashMap|HashSet|Map<|Set</.test(code)) checks.push("이 문제는 hashing 계열입니다. Map/Set 또는 그에 준하는 key 전략이 코드에 드러나는지 확인하세요.");
+      if (problem.pattern.toLowerCase().includes("bfs") && !/Queue|ArrayDeque/.test(code)) checks.push("BFS 계열 문제라면 Queue 또는 ArrayDeque 사용이 자연스럽습니다.");
+      if (problem.pattern.toLowerCase().includes("dp") && !/dp|memo|cache/i.test(code)) checks.push("DP 계열 문제라면 state 저장 배열/맵 이름이 코드에 드러나면 설명이 쉬워집니다.");
+      const box = document.getElementById("localCheckBox");
+      if (!box) return;
+      if (checks.length === 0) {
+        box.innerHTML = `<div class="tag-row"><span class="tag easy">Pass</span><span>형태상 큰 누락은 보이지 않습니다. Submit으로 복잡도와 edge case 피드백을 받아보세요.</span></div>`;
+      } else {
+        box.innerHTML = `<div class="tag-row"><span class="tag medium">Review</span></div><ul>${checks.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+      }
+    }
+
+    function saveApiSettings() {
+      const key = document.getElementById("apiKeyInput")?.value.trim() || "";
+      const model = document.getElementById("modelInput")?.value.trim() || "gpt-5.5";
+      const remember = Boolean(document.getElementById("rememberKeyInput")?.checked);
+      localStorage.setItem(modelStorageKey, model);
+      if (remember && key) {
+        localStorage.setItem(apiKeyStorageKey, key);
+        sessionStorage.removeItem(apiKeyStorageKey);
+      } else {
+        localStorage.removeItem(apiKeyStorageKey);
+        if (key) sessionStorage.setItem(apiKeyStorageKey, key);
+        else sessionStorage.removeItem(apiKeyStorageKey);
+      }
+      return { key, model };
+    }
+
+    function feedbackSchema() {
+      return {
+        type: "object",
+        additionalProperties: false,
+        required: ["score", "verdict", "complexity", "strengths", "issues", "suggestions", "edgeCases", "improvedCode"],
+        properties: {
+          score: { type: "integer" },
+          verdict: { type: "string" },
+          complexity: { type: "string" },
+          strengths: { type: "array", items: { type: "string" } },
+          issues: { type: "array", items: { type: "string" } },
+          suggestions: { type: "array", items: { type: "string" } },
+          edgeCases: { type: "array", items: { type: "string" } },
+          improvedCode: { type: "string" }
+        }
+      };
+    }
+
+    function buildGradingInput(problem, code) {
+      return [
+        {
+          role: "system",
+          content: "You are a senior Java coding interview evaluator. Grade the submitted solution for correctness, algorithmic fit, Java style, edge cases, and interview communication. Respond in Korean except Java code. Be direct and actionable."
+        },
+        {
+          role: "user",
+          content: [
+            `Problem title: ${problem.title}`,
+            `Chapter: ${problem.chapter}`,
+            `Difficulty: ${problem.difficulty}`,
+            `Prompt: ${problem.prompt}`,
+            `Expected pattern: ${problem.pattern}`,
+            `Java hook: ${problem.hook}`,
+            `Known trap: ${problem.trap}`,
+            "Submission:",
+            code
+          ].join("\n")
+        }
+      ];
+    }
+
+    function extractResponseText(data) {
+      if (typeof data.output_text === "string") return data.output_text;
+      const chunks = [];
+      for (const item of data.output || []) {
+        for (const content of item.content || []) {
+          if (typeof content.text === "string") chunks.push(content.text);
+        }
+      }
+      return chunks.join("\n");
+    }
+
+    async function submitForFeedback() {
+      const problem = currentProblem();
+      const code = currentEditorCode();
+      const feedbackBox = document.getElementById("feedbackBox");
+      if (!feedbackBox) return;
+      saveCurrentDraft();
+      const { key, model } = saveApiSettings();
+      if (!key) {
+        feedbackBox.innerHTML = "OpenAI API key를 입력해야 제출 채점을 받을 수 있습니다.";
+        return;
+      }
+      if (code.trim().length < 40) {
+        feedbackBox.innerHTML = "채점할 코드가 너무 짧습니다. 풀이 메서드와 핵심 로직을 먼저 작성하세요.";
+        return;
+      }
+      feedbackBox.innerHTML = "채점 중입니다. 문제, 기대 패턴, 제출 코드를 OpenAI API로 보내고 있습니다.";
+      try {
+        const response = await fetch("https://api.openai.com/v1/responses", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${key}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model,
+            input: buildGradingInput(problem, code),
+            max_output_tokens: 1800,
+            text: {
+              format: {
+                type: "json_schema",
+                name: "coding_interview_feedback",
+                strict: true,
+                schema: feedbackSchema()
+              }
+            }
+          })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const message = data.error?.message || `${response.status} ${response.statusText}`;
+          throw new Error(message);
+        }
+        const text = extractResponseText(data);
+        const feedback = JSON.parse(text);
+        localStorage.setItem(feedbackKey(problem.id), JSON.stringify(feedback));
+        feedbackBox.innerHTML = renderFeedback(feedback);
+      } catch (error) {
+        feedbackBox.innerHTML = `<div class="tag-row"><span class="tag hard">Error</span><span>${escapeHtml(error.message || error)}</span></div><p>브라우저 직접 호출이 CORS 또는 네트워크 정책에 막히면, 같은 요청 본문을 작은 로컬 백엔드로 옮기는 방식이 필요합니다.</p>`;
+      }
     }
 
     function updateProgress() {
@@ -1449,15 +2425,28 @@ public static void main(String[] args) {
       document.getElementById("pageSubtitle").textContent = subtitle;
     }
 
+    function selectProblem(id) {
+      const exists = problems.some((p) => p.id === id);
+      if (!exists) return;
+      saveCurrentDraft();
+      selectedProblemId = id;
+      localStorage.setItem(selectedKey, id);
+      renderProblems();
+      renderWorkspace();
+    }
+
     function chooseRandom() {
       const remaining = problems.filter((p) => !doneSet.has(p.id));
       const pool = remaining.length ? remaining : problems;
       const pick = pool[Math.floor(Math.random() * pool.length)];
       switchTab("drill");
+      selectedProblemId = pick.id;
+      localStorage.setItem(selectedKey, pick.id);
       document.getElementById("difficultyFilter").value = "all";
       document.getElementById("chapterFilter").value = pick.chapter;
       document.getElementById("searchInput").value = pick.title;
       renderProblems();
+      renderWorkspace();
       setTimeout(() => {
         const card = document.querySelector(`[data-card-id="${pick.id}"]`);
         if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1472,7 +2461,7 @@ public static void main(String[] args) {
         "3. 30분: 주 패턴으로 Java 구현",
         "4. 15분: edge case 테스트",
         "5. 20분: 복잡도 개선 또는 리팩터링"
-      ].join("\\n");
+      ].join("\n");
       navigator.clipboard?.writeText(text);
     }
 
@@ -1485,6 +2474,8 @@ public static void main(String[] args) {
     function updateTimer(state) {
       document.getElementById("timerText").textContent = formatTime(timerRemaining);
       document.getElementById("timerState").textContent = state;
+      const top = document.getElementById("topTimerText");
+      if (top) top.textContent = state === "running" ? formatTime(timerRemaining) : `${formatTime(timerRemaining)} · ${state}`;
     }
 
     function startTimer() {
@@ -1515,7 +2506,10 @@ public static void main(String[] args) {
 
     document.addEventListener("click", (event) => {
       const tab = event.target.closest("[data-tab]");
-      if (tab) switchTab(tab.dataset.tab);
+      if (tab) {
+        switchTab(tab.dataset.tab);
+        return;
+      }
 
       const toggle = event.target.closest("[data-toggle]");
       if (toggle) {
@@ -1525,6 +2519,60 @@ public static void main(String[] args) {
         saveDone();
         updateProgress();
         renderProblems();
+        renderWorkspace();
+        return;
+      }
+
+      const open = event.target.closest("[data-open]");
+      if (open) {
+        selectProblem(open.dataset.open);
+        return;
+      }
+
+      const resetCode = event.target.closest("[data-reset-code]");
+      if (resetCode) {
+        const problem = problems.find((p) => p.id === resetCode.dataset.resetCode);
+        if (problem) {
+          localStorage.removeItem(draftKey(problem.id));
+          renderWorkspace();
+        }
+        return;
+      }
+
+      const staticCheck = event.target.closest("[data-static-check]");
+      if (staticCheck) {
+        runStaticCheck();
+        return;
+      }
+
+      const saveApi = event.target.closest("[data-save-api]");
+      if (saveApi) {
+        saveApiSettings();
+        const feedbackBox = document.getElementById("feedbackBox");
+        if (feedbackBox) feedbackBox.innerHTML = "API 설정을 저장했습니다. Remember를 끈 경우 API key는 이 탭 세션에만 보관됩니다.";
+        return;
+      }
+
+      const submitCode = event.target.closest("[data-submit-code]");
+      if (submitCode) {
+        submitForFeedback();
+        return;
+      }
+
+      const record = event.target.closest("[data-record]");
+      if (record) {
+        recordResult(record.dataset.recordId, record.dataset.record);
+        return;
+      }
+
+      const reviewOpen = event.target.closest("[data-review-open]");
+      if (reviewOpen) {
+        switchTab("drill");
+        document.getElementById("searchInput").value = "";
+        document.getElementById("difficultyFilter").value = "all";
+        document.getElementById("chapterFilter").value = "all";
+        selectProblem(reviewOpen.dataset.reviewOpen);
+        return;
       }
 
       const focus = event.target.closest("[data-focus]");
@@ -1534,8 +2582,30 @@ public static void main(String[] args) {
           document.getElementById("searchInput").value = problem.title;
           document.getElementById("difficultyFilter").value = "all";
           document.getElementById("chapterFilter").value = "all";
+          selectedProblemId = problem.id;
+          localStorage.setItem(selectedKey, problem.id);
           renderProblems();
+          renderWorkspace();
         }
+      }
+    });
+
+    document.addEventListener("toggle", (event) => {
+      const el = event.target;
+      if (el?.dataset?.hintLevel && el.open) {
+        const id = el.dataset.hintProblem;
+        const level = Number(el.dataset.hintLevel);
+        const current = Number(localStorage.getItem(hintsPrefix + id) || 0);
+        if (level > current) localStorage.setItem(hintsPrefix + id, String(level));
+      }
+    }, true);
+
+    document.addEventListener("input", (event) => {
+      if (event.target?.id === "codeEditor") {
+        localStorage.setItem(draftKey(event.target.dataset.problemId), event.target.value);
+      }
+      if (event.target?.id === "modelInput") {
+        localStorage.setItem(modelStorageKey, event.target.value.trim() || "gpt-5.5");
       }
     });
 
@@ -1550,6 +2620,10 @@ public static void main(String[] args) {
       updateProgress();
       renderProblems();
     });
+    document.getElementById("topTimerToggle").addEventListener("click", () => {
+      if (timerId) pauseTimer();
+      else startTimer();
+    });
     document.getElementById("timerStart").addEventListener("click", startTimer);
     document.getElementById("timerPause").addEventListener("click", pauseTimer);
     document.getElementById("timerReset").addEventListener("click", resetTimer);
@@ -1558,9 +2632,15 @@ public static void main(String[] args) {
     notes.value = localStorage.getItem(notesKey) || "";
     notes.addEventListener("input", () => localStorage.setItem(notesKey, notes.value));
 
+    if (!problems.some((p) => p.id === selectedProblemId)) {
+      selectedProblemId = problems[0].id;
+      localStorage.setItem(selectedKey, selectedProblemId);
+    }
     renderChapters();
     renderChapterOptions();
     renderProblems();
+    renderWorkspace();
+    renderReviewQueue();
     updateProgress();
     updateTimer("ready");
   </script>
