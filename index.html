@@ -378,19 +378,28 @@
         </div>
 
         <div class="api">
-          <h2 style="margin:0;">오디오 파일 생성</h2>
-          <div class="small">브라우저 음성은 바로 들을 수 있습니다. WAV 파일로 저장하려면 OpenAI API 키를 입력해 TTS를 호출하세요. 키는 저장하지 않고 현재 화면에서만 사용합니다.</div>
+          <h2 style="margin:0;">API 설정 · 오디오 생성</h2>
+          <div class="small">스크립트 생성은 OpenAI 또는 Claude(Anthropic) API로 할 수 있습니다. 오디오(TTS) 저장은 OpenAI 전용이므로 WAV를 만들려면 OpenAI 키가 필요합니다. 키는 저장하지 않고 현재 화면에서만 사용합니다.</div>
+          <div class="controls" style="margin-top:0;">
+            <label>
+              스크립트 생성 제공자
+              <select id="provider">
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Claude (Anthropic)</option>
+              </select>
+            </label>
+            <label>
+              스크립트 생성 모델
+              <select id="scriptModel"></select>
+            </label>
+          </div>
           <label>
-            API 키
-            <input id="apiKey" type="password" placeholder="sk-...">
+            스크립트 생성 API 키
+            <input id="apiKey" type="password" placeholder="sk-... 또는 sk-ant-...">
           </label>
           <label>
-            스크립트 생성 모델
-            <select id="scriptModel">
-              <option value="gpt-4.1">gpt-4.1</option>
-              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
-              <option value="gpt-5.5">gpt-5.5</option>
-            </select>
+            OpenAI TTS API 키 <span class="small" style="display:inline;">(오디오 저장용, 스크립트 키와 같으면 비워도 됨)</span>
+            <input id="ttsApiKey" type="password" placeholder="sk-...">
           </label>
           <div class="voice-grid">
             <label>
@@ -613,6 +622,8 @@
     async function makeAiScript() {
       const raw = sourceText.value.trim();
       const key = $("apiKey").value.trim();
+      const provider = $("provider").value;
+      const providerLabel = provider === "anthropic" ? "Claude" : "OpenAI";
       if (!raw) {
         setStatus("원문을 먼저 입력하세요.");
         return;
@@ -628,9 +639,10 @@
       const length = $("length").selectedOptions[0].textContent;
       const model = $("scriptModel").value;
       const source = cleanText(raw).slice(0, 18000);
+      const systemPrompt = "You are an expert Korean podcast writer. Create grounded, natural, broadcast-ready dialogue from the user's material.";
 
       $("aiGenerateBtn").disabled = true;
-      setStatus("OpenAI API로 팟캐스트 스크립트를 생성 중입니다.");
+      setStatus(`${providerLabel} API로 팟캐스트 스크립트를 생성 중입니다.`);
       try {
         const prompt = [
           "업로드된 자료를 바탕으로 한국어 2인 팟캐스트 대화 스크립트를 작성해 주세요.",
@@ -653,45 +665,10 @@
           source
         ].join("\n");
 
-        const response = await fetch("https://api.openai.com/v1/responses", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${key}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model,
-            input: [
-              {
-                role: "developer",
-                content: [
-                  {
-                    type: "input_text",
-                    text: "You are an expert Korean podcast writer. Create grounded, natural, broadcast-ready dialogue from the user's material."
-                  }
-                ]
-              },
-              {
-                role: "user",
-                content: [
-                  {
-                    type: "input_text",
-                    text: prompt
-                  }
-                ]
-              }
-            ],
-            temperature: 0.8
-          })
-        });
+        const script = provider === "anthropic"
+          ? await requestAnthropicScript(key, model, systemPrompt, prompt)
+          : await requestOpenAiScript(key, model, systemPrompt, prompt);
 
-        if (!response.ok) {
-          const text = await response.text();
-          throw new Error(text.slice(0, 260) || `HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-        const script = extractResponseText(data).replace(/^```[a-z]*\s*|\s*```$/g, "").trim();
         if (!script) throw new Error("API 응답에서 스크립트를 읽지 못했습니다.");
 
         scriptOutput.textContent = script;
@@ -705,6 +682,83 @@
       } finally {
         $("aiGenerateBtn").disabled = false;
       }
+    }
+
+    async function requestOpenAiScript(key, model, systemPrompt, prompt) {
+      const response = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${key}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model,
+          input: [
+            { role: "developer", content: [{ type: "input_text", text: systemPrompt }] },
+            { role: "user", content: [{ type: "input_text", text: prompt }] }
+          ],
+          temperature: 0.8
+        })
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text.slice(0, 260) || `HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      return extractResponseText(data).replace(/^```[a-z]*\s*|\s*```$/g, "").trim();
+    }
+
+    async function requestAnthropicScript(key, model, systemPrompt, prompt) {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "x-api-key": key,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model,
+          max_tokens: 8000,
+          system: systemPrompt,
+          messages: [{ role: "user", content: prompt }]
+        })
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text.slice(0, 260) || `HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      return extractAnthropicText(data).replace(/^```[a-z]*\s*|\s*```$/g, "").trim();
+    }
+
+    function extractAnthropicText(data) {
+      const parts = [];
+      for (const block of data.content || []) {
+        if (block.type === "text" && typeof block.text === "string") parts.push(block.text);
+      }
+      return parts.join("\n");
+    }
+
+    const MODEL_OPTIONS = {
+      openai: [
+        { value: "gpt-4.1", label: "gpt-4.1" },
+        { value: "gpt-4.1-mini", label: "gpt-4.1-mini" },
+        { value: "gpt-5.5", label: "gpt-5.5" }
+      ],
+      anthropic: [
+        { value: "claude-opus-4-8", label: "Claude Opus 4.8" },
+        { value: "claude-sonnet-5", label: "Claude Sonnet 5" },
+        { value: "claude-haiku-4-5", label: "Claude Haiku 4.5" }
+      ]
+    };
+
+    function updateModelOptions() {
+      const provider = $("provider").value;
+      const options = MODEL_OPTIONS[provider] || MODEL_OPTIONS.openai;
+      $("scriptModel").innerHTML = options
+        .map((opt) => `<option value="${opt.value}">${opt.label}</option>`)
+        .join("");
     }
 
     function extractResponseText(data) {
@@ -799,14 +853,14 @@
     }
 
     async function generateTts() {
-      const key = $("apiKey").value.trim();
+      const key = $("ttsApiKey").value.trim() || $("apiKey").value.trim();
       const lines = dialogueLines();
       if (!lines.length) {
         setStatus("먼저 스크립트를 생성하세요.");
         return;
       }
       if (!key) {
-        setStatus("WAV 파일을 만들려면 API 키가 필요합니다.");
+        setStatus("WAV 파일을 만들려면 OpenAI TTS API 키가 필요합니다.");
         return;
       }
       $("ttsBtn").disabled = true;
@@ -969,6 +1023,7 @@
 
     $("generateBtn").addEventListener("click", makeScript);
     $("aiGenerateBtn").addEventListener("click", makeAiScript);
+    $("provider").addEventListener("change", updateModelOptions);
     $("playSpeechBtn").addEventListener("click", speakBrowser);
     $("stopSpeechBtn").addEventListener("click", stopSpeech);
     $("ttsBtn").addEventListener("click", generateTts);
@@ -1062,6 +1117,7 @@
     }
 
     buildMeter();
+    updateModelOptions();
     populateBrowserVoices();
     updateStats();
     if ("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = populateBrowserVoices;
